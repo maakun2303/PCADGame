@@ -1,5 +1,5 @@
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.util.mxConstants;
@@ -32,9 +32,8 @@ public class MapVisualizator {
         JGraphXAdapter<Node, DefaultEdge> graphAdapter =
                 new JGraphXAdapter<Node, DefaultEdge>(g);
 
-        //graphAdapter.setMinimumGraphSize(new mxRectangle(0,0,700,500)); //non va
         mxGraphComponent gracom = new mxGraphComponent(graphAdapter);
-        mxGraphView gravie = graphAdapter.getView();
+       mxGraphView gravie = graphAdapter.getView();
 
         Hashtable<String, Object> style = new Hashtable<String, Object>();
 
@@ -53,10 +52,14 @@ public class MapVisualizator {
         graphAdapter.setStylesheet(edgeStyle);
 
 
-        gravie.setScale(2);
-        gravie.setGraphBounds(new mxRectangle(20, 20, 1600, 900));
-        frame.add(gracom);
-        frame.setSize(1920, 1080);
+        gravie.setScale(1);
+        //Adding panel for padding
+        JPanel p =new JPanel();
+        p.add(gracom);
+        frame.add(p);
+        frame.setSize(600, 400);
+
+
 
         mxIGraphLayout layout = new mxFastOrganicLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
@@ -80,6 +83,7 @@ public class MapVisualizator {
             return String.valueOf(getWeight());
         }
     }
+
 
     public static Graph<Node, DefaultEdge> buildGraph() {
         Map g = new Map();
