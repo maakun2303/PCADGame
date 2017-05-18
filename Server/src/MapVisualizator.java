@@ -61,7 +61,6 @@ public class MapVisualizator {
         mxIGraphLayout layout = new mxFastOrganicLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
 
-
         frame.setLocationByPlatform(true);
         frame.setVisible(true);
     }

@@ -5,12 +5,12 @@ public class ClientProfile {
 
     public void setNickname(String N) {this.Nickname = N;}
     public String getNickname() {
-        return this.Nickname
+        return this.Nickname;
     }
     public EnumColor getTeam(){return this.Team;}
 }
 
-public enum EnumColor{
+enum EnumColor{
 black, white;
 
 }
