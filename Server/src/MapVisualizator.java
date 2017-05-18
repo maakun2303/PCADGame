@@ -42,7 +42,6 @@ public class MapVisualizator {
         style.put(mxConstants.STYLE_ORTHOGONAL, false);
         style.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
         style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
-        //style.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
         style.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
         style.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
         style.put(mxConstants.STYLE_STROKECOLOR, "#6482B9"); // default is #6482B9
@@ -86,7 +85,6 @@ public class MapVisualizator {
 
     public static Graph<Node, DefaultEdge> buildGraph() {
         Map g = new Map();
-
         return g.structure;
     }
 }
