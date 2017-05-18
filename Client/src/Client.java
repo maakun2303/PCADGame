@@ -1,40 +1,38 @@
 import java.io.*;
 import java.net.*;
-
 public class Client {
-    public static void main(String[] args) throws IOException {
 
-        if (args.length != 2) {
-            System.err.println(
-                    "Usage: java EchoClient <host name> <port number>");
-            System.exit(1);
-        }
+    static final String hostName = "localhost";
+    static final int portNumber = 41423;
 
-        String hostName = args[0];
-        int portNumber = Integer.parseInt(args[1]);
+    //ClientProfile sarebbe utile poterla vedere e impostare già qui sul client...ma non so come farlo.
+    //Da vedere e nel caso implementare, per ora uso un'altra soluzione schifosa...
 
+    ///////////
+    private String username;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    //////////
+
+    public void startConnection(String hostName, int portNumber) {
         try (
                 Socket gSocket = new Socket(hostName, portNumber);
                 PrintWriter out = new PrintWriter(gSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(gSocket.getInputStream()));
         ) {
-            BufferedReader stdIn =
-                    new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             String fromServer;
-            String fromUser;
 
-            while ((fromServer = in.readLine()) != null) {
-                System.out.println("Server: " + fromServer);
-                if (fromServer.equals("Bye."))
-                    break;
-
-                fromUser = stdIn.readLine();
-                if (fromUser != null) {
-                    System.out.println("Client: " + fromUser);
-                    out.println(fromUser);
-                }
+            if ((fromServer = in.readLine()) != null) System.out.println("Server: " + fromServer);
+            if (username != null) {
+                System.out.println("Client: " + username);
+                out.println(username);
             }
+            if ((fromServer = in.readLine()) != null) System.out.println("Server: " + fromServer);
+
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
@@ -43,6 +41,13 @@ public class Client {
                     hostName);
             System.exit(1);
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        Client client = new Client();
+        client.startConnection(hostName, portNumber);
+
     }
 }
 
