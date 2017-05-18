@@ -51,11 +51,10 @@ public class MapVisualizator {
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(style);
         graphAdapter.setStylesheet(edgeStyle);
-        System.out.println(graphAdapter.getStylesheet().getDefaultEdgeStyle().toString());
+
 
         gravie.setScale(2);
         gravie.setGraphBounds(new mxRectangle(20, 20, 1600, 900));
-        //gracom.setMinimumSize(new Dimension(700,500)); //non va
         frame.add(gracom);
         frame.setSize(1920, 1080);
 

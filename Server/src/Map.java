@@ -12,7 +12,7 @@ public final class Map {
 
         // Create the CompleteGraphGenerator object
         ScaleFreeGraphGenerator<Node, DefaultEdge> connectedGenerator =
-                new ScaleFreeGraphGenerator<Node, DefaultEdge>(20);
+                new ScaleFreeGraphGenerator<Node, DefaultEdge>(10);
 
         connectedGenerator.generateGraph(structure, vFactory, null);
 

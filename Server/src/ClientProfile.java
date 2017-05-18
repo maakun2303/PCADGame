@@ -1,24 +1,17 @@
 public class ClientProfile {
-    private long ID;
+
     private String Nickname;
+    private EnumColor Team;
 
-    public ClientProfile(long ID) {
-        this.ID = ID;
-    }
-
-    public void setID(long ID) {
-        this.ID = ID;
-    }
-
-    public void setNickname(String N) {
-        this.Nickname = N;
-    }
-
-    public long getID() {
-        return this.ID;
-    }
-
+    public void setNickname(String N) {this.Nickname = N;}
     public String getNickname() {
-        return this.Nickname;
+        return this.Nickname
     }
+    public EnumColor getTeam(){return this.Team;}
 }
+
+public enum EnumColor{
+black, white;
+
+}
+
