@@ -2,17 +2,20 @@ import java.util.Random;
 
 public class Node {
     public String name;
+    public ClientProfile player;
     public int ammo;
     static int id = 0;
 
     Node() {
+        name = "p" + id++;
         Random rand = new Random();
         ammo = rand.nextInt(10);
-        name = "p" + id++;
+        player =  new ClientProfile();
     }
 
     @Override
     public String toString() {
         return name;
     }
+
 }

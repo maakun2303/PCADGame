@@ -1,5 +1,5 @@
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.util.mxConstants;
@@ -32,9 +32,8 @@ public class MapVisualizator {
         JGraphXAdapter<Node, DefaultEdge> graphAdapter =
                 new JGraphXAdapter<Node, DefaultEdge>(g);
 
-        //graphAdapter.setMinimumGraphSize(new mxRectangle(0,0,700,500)); //non va
         mxGraphComponent gracom = new mxGraphComponent(graphAdapter);
-        mxGraphView gravie = graphAdapter.getView();
+       mxGraphView gravie = graphAdapter.getView();
 
         Hashtable<String, Object> style = new Hashtable<String, Object>();
 
@@ -42,7 +41,6 @@ public class MapVisualizator {
         style.put(mxConstants.STYLE_ORTHOGONAL, false);
         style.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
         style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
-        //style.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_CLASSIC);
         style.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
         style.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
         style.put(mxConstants.STYLE_STROKECOLOR, "#6482B9"); // default is #6482B9
@@ -52,17 +50,19 @@ public class MapVisualizator {
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(style);
         graphAdapter.setStylesheet(edgeStyle);
-        System.out.println(graphAdapter.getStylesheet().getDefaultEdgeStyle().toString());
 
-        gravie.setScale(2);
-        gravie.setGraphBounds(new mxRectangle(20, 20, 1600, 900));
-        //gracom.setMinimumSize(new Dimension(700,500)); //non va
-        frame.add(gracom);
-        frame.setSize(1920, 1080);
+
+        gravie.setScale(1);
+        //Adding panel for padding
+        JPanel p =new JPanel();
+        p.add(gracom);
+        frame.add(p);
+        frame.setSize(600, 400);
+
+
 
         mxIGraphLayout layout = new mxFastOrganicLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
-
 
         frame.setLocationByPlatform(true);
         frame.setVisible(true);
@@ -84,9 +84,9 @@ public class MapVisualizator {
         }
     }
 
+
     public static Graph<Node, DefaultEdge> buildGraph() {
         Map g = new Map();
-
         return g.structure;
     }
 }
