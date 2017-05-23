@@ -3,7 +3,7 @@ import java.io.Serializable;
 /**
  * Created by Filippo on 22/05/2017.
  */
-public class clientProfile implements Serializable {
+public class ClientProfile implements Serializable {
 
     private String nickname;
     private EnumColor team;
@@ -27,7 +27,7 @@ public class clientProfile implements Serializable {
         return this.team;
     }
 
-    clientProfile() {
+    ClientProfile() {
     }
 
     enum EnumColor {

@@ -1,41 +1,45 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
-public class ClientGUI {
-    private JFrame frame;
-    private JFrame frame2;
+public class LoginGUI {
+    private static JFrame frame = new JFrame("LoginGUI");
     private JPanel panel1;
-    private JPanel panel2;
     private JButton loginButton;
     private JTextField textField1;
 
 
-    public ClientGUI() {
+    public LoginGUI() {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Client client = new Client();
-                //client.setUsername(textField1.getText());
-                //client.startConnection(Client.hostName, Client.portNumber);
+                clientClass client = new clientClass();
+                client.setNickname(textField1.getText());
+                try {
+                    client.startConnection(client.remoteHost, client.portWasBinded);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                //crasha se server down, bisognerà aggiungere qualche controllo...
 
-                panel1.removeAll();
-                panel1.repaint();
-                JOptionPane.showMessageDialog(null,"username sent");
+                frame.setVisible(false);
+                WaitingGUI wait = new WaitingGUI();
+                wait.startGUI();
             }
         });
     }
 
-    public void startGUI(){
-        frame = new JFrame("ClientGUI");
-        frame.setContentPane(new ClientGUI().panel1);
+    public static void startGUI(){
+        frame.setContentPane(new LoginGUI().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
+        frame.setSize(400,300);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
     public static void main(String[] args) {
-        ClientGUI gui = new ClientGUI();
+        LoginGUI gui = new LoginGUI();
         gui.startGUI();
 
     }

@@ -14,10 +14,10 @@ import java.util.Random;
  */
 public class serverClass implements serverInterface {
 
-    List<clientProfile> loggedPlayers = new ArrayList<>();
+    List<ClientProfile> loggedPlayers = new ArrayList<>();
 
-    public clientProfile login(String username) {
-        clientProfile player = new clientProfile();
+    public ClientProfile login(String username) {
+        ClientProfile player = new ClientProfile();
         player.setNickname(username);
 
         Random randomno = new Random();

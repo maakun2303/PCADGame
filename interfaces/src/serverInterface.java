@@ -3,5 +3,5 @@
  */
 public interface serverInterface {
 
-    clientProfile login (String username);
+    ClientProfile login (String username);
 }
