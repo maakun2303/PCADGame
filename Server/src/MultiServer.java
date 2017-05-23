@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class MultiServer {
-    private static ArrayList<ClientProfile> ClientsList;
+    private static ArrayList<clientProfile> ClientsList;
 
     public static void main(String[] args) throws IOException {
 

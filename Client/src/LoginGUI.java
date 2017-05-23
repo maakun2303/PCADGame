@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class LoginGUI {
     private static JFrame frame = new JFrame("LoginGUI");
@@ -13,9 +14,13 @@ public class LoginGUI {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Client client = new Client();
-                client.setUsername(textField1.getText());
-                client.startConnection(Client.hostName, Client.portNumber);
+                clientClass client = new clientClass();
+                client.setNickname(textField1.getText());
+                try {
+                    client.startConnection(client.remoteHost, client.portWasBinded);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
                 //crasha se server down, bisognerà aggiungere qualche controllo...
 
                 frame.setVisible(false);

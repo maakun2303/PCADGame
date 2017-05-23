@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Node {
     public String name;
-    public ClientProfile player;
+    public clientProfile player;
     public int ammo;
     static int id = 0;
 
@@ -10,7 +10,7 @@ public class Node {
         name = "p" + id++;
         Random rand = new Random();
         ammo = rand.nextInt(10);
-        player =  new ClientProfile();
+        player =  new clientProfile();
     }
 
     @Override

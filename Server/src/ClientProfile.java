@@ -1,25 +1,36 @@
-public class ClientProfile {
+import java.io.Serializable;
 
-    private String Nickname;
-    private EnumColor Team;
+/**
+ * Created by Filippo on 22/05/2017.
+ */
+public class clientProfile implements Serializable {
 
-    public void setNickname(String N) {
-        this.Nickname = N;
+    private String nickname;
+    private EnumColor team;
+
+    public void setNickname(String n) {
+        this.nickname = n;
+    }
+
+    public void setTeam (Boolean b){
+        if(b == true)
+            this.team = EnumColor.white;
+        else
+            this.team = EnumColor.black;
     }
 
     public String getNickname() {
-        return this.Nickname;
+        return this.nickname;
     }
 
     public EnumColor getTeam() {
-        return this.Team;
+        return this.team;
     }
 
-    ClientProfile() {
+    clientProfile() {
     }
 
     enum EnumColor {
         black, white
     }
 }
-
