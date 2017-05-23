@@ -1,4 +1,4 @@
-import java.io.*;
+import javax.swing.*;import java.awt.event.MouseAdapter;import java.awt.event.MouseEvent;import java.io.*;
 import java.net.*;
 public class Client {
 
@@ -49,5 +49,6 @@ public class Client {
         client.startConnection(hostName, portNumber);
 
     }
+
 }
 
