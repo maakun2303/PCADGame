@@ -8,24 +8,30 @@ public class LoginGUI {
     private JPanel panel1;
     private JButton loginButton;
     private JTextField textField1;
+    public static String Input;
 
 
     public LoginGUI() {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                clientClass client = new clientClass();
-                client.setNickname(textField1.getText());
-                try {
-                    client.startConnection(client.remoteHost, client.portWasBinded);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                ClientClass client = new ClientClass();
+                Input = (textField1.getText());
+                if (Input.isEmpty()) {
+                    System.out.println("Please enter a Nickname");
                 }
-                //crasha se server down, bisognerà aggiungere qualche controllo...
+                else{
+                    try {
+                        client.startConnection(client.remoteHost, client.portWasBinded);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    //crasha se server down, bisognerà aggiungere qualche controllo...
 
-                frame.setVisible(false);
-                WaitingGUI wait = new WaitingGUI();
-                wait.startGUI();
+                    frame.setVisible(false);
+                    WaitingGUI wait = new WaitingGUI();
+                    wait.startGUI();
+                }
             }
         });
     }
