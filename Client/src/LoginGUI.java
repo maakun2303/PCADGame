@@ -18,7 +18,7 @@ public class LoginGUI {
                 ClientClass client = new ClientClass();
                 Input = (textField1.getText());
                 if (Input.isEmpty()) {
-                    System.out.println("Please enter a Nickname");
+                    JOptionPane.showMessageDialog(null, "Please enter a nickname");
                 }
                 else{
                         serverInterface remoteObject = null;
@@ -33,11 +33,6 @@ public class LoginGUI {
                             ClientProfile player = remoteObject.login(LoginGUI.Input);
                             if(player.getNickname().equals("tryAgain")) JOptionPane.showMessageDialog(null, "Nickname already picked! Choose a different one");
                             else {
-                                    try {
-                                        client.startConnection(client.remoteHost, client.portWasBinded);
-                                    } catch (IOException e1) {
-                                        e1.printStackTrace();
-                                    }
                                     frame.setVisible(false);
                                     WaitingGUI wait = new WaitingGUI();
                                     wait.startGUI();
