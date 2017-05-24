@@ -38,14 +38,12 @@ public class LoginGUI {
                                     } catch (IOException e1) {
                                         e1.printStackTrace();
                                     }
+                                    frame.setVisible(false);
+                                    WaitingGUI wait = new WaitingGUI();
+                                    wait.startGUI();
                             }
                         }
                     //crasha se server down, bisognerà aggiungere qualche controllo...
-                    if(remoteObject.showConnectedPlayers() < 4) {
-                        frame.setVisible(false);
-                        WaitingGUI wait = new WaitingGUI();
-                        wait.startGUI();
-                    }
                 }
             }
         });
