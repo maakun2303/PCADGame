@@ -22,11 +22,15 @@ public class WaitingGUI {
                 serverInterface remoteObject = null;
                 try {
                     remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
+
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
 
-                if(remoteObject.ShowConnectedPlayers() > 0) label1.setText("Waiting for more " + remoteObject.ShowConnectedPlayers());
+                if(remoteObject.showConnectedPlayers() < remoteObject.getMaxPlayers()){
+                    int result = remoteObject.getMaxPlayers() - remoteObject.showConnectedPlayers();
+                    label1.setText("Waiting for more " + result + " players");
+                }
                 else {
                     frame.setVisible(false);
                     PlayingGUI play = new PlayingGUI();

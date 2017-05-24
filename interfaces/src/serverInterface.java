@@ -6,6 +6,7 @@ import java.util.List;
 public interface serverInterface {
 
     ClientProfile login (String username);
-    int ShowConnectedPlayers();
+    int showConnectedPlayers();
+    int getMaxPlayers();
 
 }

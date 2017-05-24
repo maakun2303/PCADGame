@@ -16,7 +16,7 @@ public class ServerClass implements serverInterface {
 
     List<ClientProfile>  loggedPlayers = new ArrayList<>();
     boolean b = false; //for team choice
-    int maxPlayers = 4;
+    private int maxPlayers = 4;
 
     public ClientProfile login(String username) {
 
@@ -43,9 +43,9 @@ public class ServerClass implements serverInterface {
         return player;
     }
 
-    public int ShowConnectedPlayers(){
-        return loggedPlayers.size();
-    }
+    public int showConnectedPlayers(){return loggedPlayers.size();}
+    public int getMaxPlayers(){return maxPlayers;}
+
 
 
     public static void main(String[] args) throws IOException, LipeRMIException {
