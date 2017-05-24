@@ -10,6 +10,8 @@ public class LoginGUI {
     private JTextField textField1;
     public static String Input;
 
+    private ClientProfile player;
+
 
     public LoginGUI() {
         loginButton.addActionListener(new ActionListener() {
@@ -31,11 +33,11 @@ public class LoginGUI {
                         }
                         if(remoteObject.showConnectedPlayers() >= 4) JOptionPane.showMessageDialog(null, "Game is full, try again later");
                         else {
-                            ClientProfile player = remoteObject.login(LoginGUI.Input);
+                            player = remoteObject.login(LoginGUI.Input);
                             if(player.getNickname().equals("tryAgain")) JOptionPane.showMessageDialog(null, "Nickname already picked! Choose a different one");
                             else {
                                     frame.setVisible(false);
-                                    WaitingGUI wait = new WaitingGUI();
+                                    WaitingGUI wait = new WaitingGUI(player);
                                     wait.startGUI();
                             }
                         }

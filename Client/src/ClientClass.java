@@ -8,7 +8,6 @@ public class ClientClass {
     static final String remoteHost = "localhost";
     static final int portWasBinded = 4455;
 
-
     public serverInterface getServerInterface(String remoteHost, int portWasBinded) throws IOException {
         CallHandler callHandler = new CallHandler();
         Client client = new Client(remoteHost, portWasBinded, callHandler);

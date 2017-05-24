@@ -9,22 +9,18 @@ public class PlayingGUI {
     private static JFrame frame = new JFrame("PlayingGUI");;
     private JPanel panel1;
     private JLabel label1;
+    private ClientProfile player;
 
 
-    public PlayingGUI() {
+    public PlayingGUI(ClientProfile player) {
+        this.player = player;
     }
 
-    public static void startGUI(){
-        frame.setContentPane(new PlayingGUI().panel1);
+    public void startGUI(){
+        frame.setContentPane(this.panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400,300);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        PlayingGUI gui = new PlayingGUI();
-        gui.startGUI();
-
     }
 }

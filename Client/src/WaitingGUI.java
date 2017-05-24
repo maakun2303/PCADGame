@@ -10,9 +10,11 @@ public class WaitingGUI {
     private static JFrame frame = new JFrame("WaitingGUI");;
     private JPanel panel1;
     private JLabel label1;
+    private ClientProfile player;
 
 
-    public WaitingGUI() {
+    public WaitingGUI(ClientProfile player) {
+        this.player = player;
         label1.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -29,11 +31,11 @@ public class WaitingGUI {
 
                 if(remoteObject.showConnectedPlayers() < remoteObject.getMaxPlayers()){
                     int result = remoteObject.getMaxPlayers() - remoteObject.showConnectedPlayers();
-                    label1.setText("Waiting for more " + result + " players");
+                    label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
                 }
                 else {
                     frame.setVisible(false);
-                    PlayingGUI play = new PlayingGUI();
+                    PlayingGUI play = new PlayingGUI(player);
                     play.startGUI();
                 }
             }
@@ -41,17 +43,17 @@ public class WaitingGUI {
         });
     }
 
-    public static void startGUI(){
-        frame.setContentPane(new WaitingGUI().panel1);
+    public void startGUI(){
+        frame.setContentPane(this.panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400,300);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         WaitingGUI gui = new WaitingGUI();
         gui.startGUI();
 
-    }
+    }*/
 }
