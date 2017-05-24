@@ -27,6 +27,7 @@ public class LoginGUI {
 
                         } catch (IOException e1) {
                             e1.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Server offline, try again later");
                         }
                         if(remoteObject.showConnectedPlayers() >= 4) JOptionPane.showMessageDialog(null, "Game is full, try again later");
                         else {
@@ -38,7 +39,6 @@ public class LoginGUI {
                                     wait.startGUI();
                             }
                         }
-                    //crasha se server down, bisognerà aggiungere qualche controllo...
                 }
             }
         });
