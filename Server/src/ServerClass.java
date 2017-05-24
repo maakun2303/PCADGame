@@ -4,6 +4,7 @@ import lipermi.net.Server;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by Filippo on 22/05/2017.
  */
-public class ServerClass implements serverInterface {
+public class ServerClass implements serverInterface, Serializable {
 
     List<ClientProfile>  loggedPlayers = new ArrayList<>();
     boolean b = false; //for team choice

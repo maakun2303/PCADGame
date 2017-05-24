@@ -13,10 +13,6 @@ public class ClientClass {
     public void startConnection(String remoteHost, int portWasBinded) throws IOException {
         serverInterface remoteObject = getServerInterface(remoteHost, portWasBinded);
         ClientProfile player = remoteObject.login(LoginGUI.Input);
-        if(player == null){
-            System.out.println("Game is full, try later !");
-            return;
-        }
         if(player.getNickname().equals("tryAgain")){
             System.out.println("Name already picked !");
             return;

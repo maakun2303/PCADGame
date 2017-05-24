@@ -21,16 +21,31 @@ public class LoginGUI {
                     System.out.println("Please enter a Nickname");
                 }
                 else{
-                    try {
-                        client.startConnection(client.remoteHost, client.portWasBinded);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    //crasha se server down, bisognerà aggiungere qualche controllo...
+                        serverInterface remoteObject = null;
+                        try {
+                            remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
 
-                    frame.setVisible(false);
-                    WaitingGUI wait = new WaitingGUI();
-                    wait.startGUI();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        if(remoteObject.showConnectedPlayers() >= 4) JOptionPane.showMessageDialog(null, "Game is full, try again later");
+                        else {
+                            ClientProfile player = remoteObject.login(LoginGUI.Input);
+                            if(player.getNickname().equals("tryAgain")) JOptionPane.showMessageDialog(null, "Nickname already picked! Choose a different one");
+                            else {
+                                    try {
+                                        client.startConnection(client.remoteHost, client.portWasBinded);
+                                    } catch (IOException e1) {
+                                        e1.printStackTrace();
+                                    }
+                            }
+                        }
+                    //crasha se server down, bisognerà aggiungere qualche controllo...
+                    if(remoteObject.showConnectedPlayers() < 4) {
+                        frame.setVisible(false);
+                        WaitingGUI wait = new WaitingGUI();
+                        wait.startGUI();
+                    }
                 }
             }
         });
