@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 /**
  * Created by msnsk on 2017/05/23.
@@ -13,11 +14,19 @@ public class WaitingGUI {
 
     public WaitingGUI() {
         label1.addMouseListener(new MouseAdapter() {
-            int count = 3;
+
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(count > 0) label1.setText("Waiting for more " + String.valueOf(--count) + " users to join the match.");
+                ClientClass client = new ClientClass();
+                serverInterface remoteObject = null;
+                try {
+                    remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+                if(remoteObject.ShowConnectedPlayers() > 0) label1.setText("Waiting for more " + remoteObject.ShowConnectedPlayers());
                 else {
                     frame.setVisible(false);
                     PlayingGUI play = new PlayingGUI();

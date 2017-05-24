@@ -12,8 +12,8 @@ public class ClientProfile implements Serializable {
         this.nickname = n;
     }
 
-    public void setTeam (Boolean b){
-        if(b == true)
+    public void setTeam(Boolean b) {
+        if (b == true)
             this.team = EnumColor.white;
         else
             this.team = EnumColor.black;
@@ -27,10 +27,16 @@ public class ClientProfile implements Serializable {
         return this.team;
     }
 
-    ClientProfile() {
-    }
-
     enum EnumColor {
         black, white
     }
+
+    ClientProfile() {
+    }
+
+    ClientProfile(String s) {
+        this.nickname = s;
+    }
 }
+
+
