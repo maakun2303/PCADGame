@@ -5,8 +5,7 @@ import java.awt.event.MouseEvent;
 /**
  * Created by msnsk on 2017/05/23.
  */
-public class PlayingGUI {
-    private static JFrame frame = new JFrame("PlayingGUI");;
+public class PlayingGUI extends JFrame{
     private JPanel panel1;
     private JLabel label1;
     private ClientProfile player;
@@ -17,10 +16,11 @@ public class PlayingGUI {
     }
 
     public void startGUI(){
-        frame.setContentPane(this.panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400,300);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        setTitle("PlayingGUI");
+        setContentPane(this.panel1);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400,300);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 }

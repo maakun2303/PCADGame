@@ -3,8 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class LoginGUI {
-    private static JFrame frame = new JFrame("LoginGUI");
+public class LoginGUI extends JFrame {
     private JPanel panel1;
     private JButton loginButton;
     private JTextField textField1;
@@ -36,7 +35,7 @@ public class LoginGUI {
                             player = remoteObject.login(LoginGUI.Input);
                             if(player.getNickname().equals("tryAgain")) JOptionPane.showMessageDialog(null, "Nickname already picked! Choose a different one");
                             else {
-                                    frame.setVisible(false);
+                                    setVisible(false);
                                     WaitingGUI wait = new WaitingGUI(player);
                                     wait.startGUI();
                             }
@@ -46,12 +45,13 @@ public class LoginGUI {
         });
     }
 
-    public static void startGUI(){
-        frame.setContentPane(new LoginGUI().panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400,300);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+    public void startGUI(){
+        setTitle("LoginGUI");
+        setContentPane(new LoginGUI().panel1);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400,300);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public static void main(String[] args) {
