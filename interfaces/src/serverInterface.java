@@ -7,6 +7,7 @@ public interface serverInterface {
 
     ClientProfile login (String username);
     int showConnectedPlayers();
+    boolean removePlayer(ClientProfile player);
     int getMaxPlayers();
 
 }

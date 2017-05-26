@@ -34,6 +34,28 @@ public class ClientProfile implements Serializable {
     ClientProfile() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof ClientProfile)) {
+            return false;
+        }
+
+        ClientProfile profile = (ClientProfile) o;
+
+        return profile.nickname.equals(nickname) &&
+                profile.team == team;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + nickname.hashCode();
+        result = 31 * result + team.hashCode();
+        return result;
+    }
+
     ClientProfile(String s) {
         this.nickname = s;
     }

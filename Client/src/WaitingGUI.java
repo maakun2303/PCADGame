@@ -28,7 +28,6 @@ public class WaitingGUI {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-
                 if(remoteObject.showConnectedPlayers() < remoteObject.getMaxPlayers()){
                     int result = remoteObject.getMaxPlayers() - remoteObject.showConnectedPlayers();
                     label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
@@ -38,8 +37,24 @@ public class WaitingGUI {
                     PlayingGUI play = new PlayingGUI(player);
                     play.startGUI();
                 }
+
             }
 
+        });
+
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                ClientClass client = new ClientClass();
+                serverInterface remoteObject = null;
+                try {
+                    remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                    remoteObject.removePlayer(player);
+                }
         });
     }
 

@@ -44,6 +44,11 @@ public class ServerClass implements serverInterface, Serializable {
         return player;
     }
 
+    public boolean removePlayer(ClientProfile player){
+        boolean ok = loggedPlayers.remove(player);
+        return ok;
+    }
+
     public int showConnectedPlayers(){return loggedPlayers.size();}
     public int getMaxPlayers(){return maxPlayers;}
 
