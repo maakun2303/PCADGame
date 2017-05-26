@@ -1,8 +1,5 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 /**
@@ -12,6 +9,7 @@ public class WaitingGUI extends JFrame{
     private JPanel panel1;
     private JLabel label1;
     private ClientProfile player;
+    private Timer SimpleTimer;
 
 
     public WaitingGUI(ClientProfile player) {
@@ -24,6 +22,16 @@ public class WaitingGUI extends JFrame{
         setLocationRelativeTo(null);
         setVisible(true);
         checkOnlineUsers();
+
+        SimpleTimer = new Timer(1000, new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkOnlineUsers();
+            }
+        });
+        SimpleTimer.start();
+
+
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -60,8 +68,8 @@ public class WaitingGUI extends JFrame{
                     label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
                 }
                 else {
+                    SimpleTimer.stop();
                     setVisible(false);
-
                     Runnable init = new Runnable() {
                         public void run() {
                             new PlayingGUI(player);
@@ -74,5 +82,4 @@ public class WaitingGUI extends JFrame{
         };
         SwingUtilities.invokeLater(target);
     }
-
 }
