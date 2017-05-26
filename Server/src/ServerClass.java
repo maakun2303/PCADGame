@@ -19,17 +19,14 @@ public class ServerClass implements serverInterface, Serializable {
     boolean b = false; //for team choice
     private int maxPlayers = 4;
 
-    public ClientProfile login(String username) {
+    public ClientProfile login(String username){
 
         ClientProfile player = new ClientProfile();
         player.setNickname(username);
 
         b = (b) ? false : true;
 
-        if(loggedPlayers.size()> maxPlayers-1){
-            System.out.println("Game is full");
-            return null;
-        }
+
 
         for(ClientProfile item: loggedPlayers){
             if(item.getNickname().equals(username)){
@@ -37,10 +34,16 @@ public class ServerClass implements serverInterface, Serializable {
                 return new ClientProfile("tryAgain");
             }
         }
+
+        player.setTeam(b);
         loggedPlayers.add(player);
 
         System.out.println("Total players: " + loggedPlayers.size());
-        player.setTeam(b);
+
+        if(loggedPlayers.size() == maxPlayers){
+            System.out.println("Game is full");
+        }
+
         return player;
     }
 
