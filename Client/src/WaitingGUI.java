@@ -17,32 +17,13 @@ public class WaitingGUI extends JFrame{
     public WaitingGUI(ClientProfile player) {
         this.player = player;
 
-        label1.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                ClientClass client = new ClientClass();
-                serverInterface remoteObject = null;
-                try {
-                    remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
-
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                if(remoteObject.showConnectedPlayers() < remoteObject.getMaxPlayers()){
-                    int result = remoteObject.getMaxPlayers() - remoteObject.showConnectedPlayers();
-                    label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
-                }
-                else {
-                    setVisible(false);
-                    PlayingGUI play = new PlayingGUI(player);
-                    play.startGUI();
-                }
-
-            }
-
-        });
+        setTitle("WaitingGUI");
+        setContentPane(panel1);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400,300);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        checkOnlineUsers();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -60,18 +41,38 @@ public class WaitingGUI extends JFrame{
         });
     }
 
-    public void startGUI(){
-        setTitle("WaitingGUI");
-        setContentPane(this.panel1);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400,300);
-        setLocationRelativeTo(null);
-        setVisible(true);
+    public void checkOnlineUsers() {
+        ClientClass client = new ClientClass();
+        serverInterface remoteObject = null;
+        try {
+            remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
+
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        serverInterface finalRemoteObject = remoteObject;
+        Runnable target = new Runnable() {
+            @Override
+            public void run() {
+                if(finalRemoteObject.showConnectedPlayers() < finalRemoteObject.getMaxPlayers()){
+                    int result = finalRemoteObject.getMaxPlayers() - finalRemoteObject.showConnectedPlayers();
+                    label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
+                }
+                else {
+                    setVisible(false);
+
+                    Runnable init = new Runnable() {
+                        public void run() {
+                            new PlayingGUI(player);
+                        }
+                    };
+                    SwingUtilities.invokeLater(init);
+                }
+
+            }
+        };
+        SwingUtilities.invokeLater(target);
     }
 
-/*    public static void main(String[] args) {
-        WaitingGUI gui = new WaitingGUI();
-        gui.startGUI();
-
-    }*/
 }

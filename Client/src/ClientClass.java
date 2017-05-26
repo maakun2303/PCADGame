@@ -13,6 +13,7 @@ public class ClientClass {
         Client client = new Client(remoteHost, portWasBinded, callHandler);
         serverInterface remoteObject;
         remoteObject = (serverInterface) client.getGlobal(serverInterface.class);
+        System.out.println(Thread.currentThread().getName());
         return remoteObject;
     }
 

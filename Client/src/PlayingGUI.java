@@ -13,14 +13,13 @@ public class PlayingGUI extends JFrame{
 
     public PlayingGUI(ClientProfile player) {
         this.player = player;
-    }
 
-    public void startGUI(){
         setTitle("PlayingGUI");
-        setContentPane(this.panel1);
+        setContentPane(panel1);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400,300);
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
 }

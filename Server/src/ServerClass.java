@@ -3,6 +3,7 @@ import lipermi.handler.CallHandler;
 import lipermi.net.Server;
 
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,7 +44,6 @@ public class ServerClass implements serverInterface, Serializable {
         if(loggedPlayers.size() == maxPlayers){
             System.out.println("Game is full");
         }
-
         return player;
     }
 

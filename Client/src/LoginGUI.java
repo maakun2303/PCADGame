@@ -13,6 +13,13 @@ public class LoginGUI extends JFrame {
 
 
     public LoginGUI() {
+        setTitle("LoginGUI");
+        setContentPane(panel1);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400,300);
+        setLocationRelativeTo(null);
+        setVisible(true);
+
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -36,8 +43,13 @@ public class LoginGUI extends JFrame {
                             if(player.getNickname().equals("tryAgain")) JOptionPane.showMessageDialog(null, "Nickname already picked! Choose a different one");
                             else {
                                     setVisible(false);
-                                    WaitingGUI wait = new WaitingGUI(player);
-                                    wait.startGUI();
+
+                                    Runnable init = new Runnable() {
+                                        public void run() {
+                                            new WaitingGUI(player);
+                                        }
+                                    };
+                                    SwingUtilities.invokeLater(init);
                             }
                         }
                 }
@@ -46,17 +58,16 @@ public class LoginGUI extends JFrame {
     }
 
     public void startGUI(){
-        setTitle("LoginGUI");
-        setContentPane(new LoginGUI().panel1);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400,300);
-        setLocationRelativeTo(null);
-        setVisible(true);
+
     }
 
     public static void main(String[] args) {
-        LoginGUI gui = new LoginGUI();
-        gui.startGUI();
-
+        Runnable init = new Runnable() {
+            public void run() {
+                new LoginGUI();
+            }
+        };
+        SwingUtilities.invokeLater(init);
     }
+
 }
