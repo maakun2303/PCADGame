@@ -30,9 +30,10 @@ public class PlayingGUI extends JFrame{
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-
+        System.out.println("CiaoClient0");
         Map m = remoteObject.getMap();
-        remoteObject.showGui(m.structure);
+        //remoteObject.showGui(m.structure);
+
 
     }
 
