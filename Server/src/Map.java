@@ -14,9 +14,11 @@ import javax.swing.*;
 import java.io.Serializable;
 import java.util.Hashtable;
 
-public final class Map implements mapInterface, Serializable {
+public final class Map implements Serializable{
 
-    Graph<Node, DefaultEdge> structure;
+    private static volatile Map instance = null ; //singleton
+    Graph<Node, DefaultEdge>structure = null;
+
 
     public Map() {
         structure = new SimpleGraph<>(DefaultEdge.class);
@@ -27,14 +29,17 @@ public final class Map implements mapInterface, Serializable {
 
         connectedGenerator.generateGraph(structure, vFactory, null);
 
-        // Create the VertexFactory so the generator can create vertices
-
-        // Use the CompleteGraphGenerator object to make mappa a
-        // complete graph with [size] number of vertices
     }
 
-    public Graph<Node, DefaultEdge> getMap(){
-        return structure;
+    public Map getMap(){
+        if(instance==null){
+            synchronized (Map.class){
+                if(instance==null){
+                    instance = new Map();
+                }
+            }
+        }
+        return instance;
     }
 
     VertexFactory<Node> vFactory = new VertexFactory<Node>() {
@@ -44,11 +49,11 @@ public final class Map implements mapInterface, Serializable {
         }
     };
 
-    public static void createAndShowGui() {
+    public static void showGui(Graph<Node, DefaultEdge> g) {
+
         JFrame frame = new JFrame("DemoGraph");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Graph<Node, DefaultEdge> g = buildGraph();
         JGraphXAdapter<Node, DefaultEdge> graphAdapter =
                 new JGraphXAdapter<Node, DefaultEdge>(g);
 
@@ -92,22 +97,19 @@ public final class Map implements mapInterface, Serializable {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGui();
+                Map m = new Map();
+                showGui(m.structure);
+
             }
         });
     }
 
 
-    public static class MyEdge extends DefaultWeightedEdge {
+   /* public static class MyEdge extends DefaultWeightedEdge implements Serializable {
         @Override
         public String toString() {
             return String.valueOf(getWeight());
         }
-    }
+    }*/
 
-
-    public static Graph<Node, DefaultEdge> buildGraph() {
-        Map g = new Map();
-        return g.structure;
-    }
 }

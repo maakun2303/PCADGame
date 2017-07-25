@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Random;
 
-public class Node {
+public class Node implements Serializable {
     public String name;
     public ClientProfile player;
     public int ammo;

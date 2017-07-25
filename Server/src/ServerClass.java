@@ -1,6 +1,8 @@
 import lipermi.exception.LipeRMIException;
 import lipermi.handler.CallHandler;
 import lipermi.net.Server;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
 
 
 import javax.swing.*;
@@ -19,6 +21,27 @@ public class ServerClass implements serverInterface, Serializable {
     List<ClientProfile>  loggedPlayers = new ArrayList<>();
     boolean b = false; //for team choice
     private int maxPlayers = 4;
+    private Map gameMap;
+
+
+    public ServerClass(){
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                gameMap = new Map();
+                System.out.println("Ciao ci sono");
+            }
+
+        });
+    }
+
+    public Map getMap(){
+        return gameMap.getMap();
+    }
+
+    public void showGui(Graph<Node, DefaultEdge> g){
+        gameMap.showGui(g);
+    }
+
 
     public ClientProfile login(String username){
 
@@ -70,6 +93,8 @@ public class ServerClass implements serverInterface, Serializable {
 
         Server server = new Server();
         int thePortIWantToBind = 4455;
+
+
 
         server.bind(thePortIWantToBind,callHandler);
         System.out.println("Binding...");
