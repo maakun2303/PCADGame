@@ -43,6 +43,7 @@ public class ServerClass implements serverInterface, Serializable {
 
         if(loggedPlayers.size() == maxPlayers){
             System.out.println("Game is full");
+
         }
         return player;
     }

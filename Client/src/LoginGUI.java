@@ -57,9 +57,6 @@ public class LoginGUI extends JFrame {
         });
     }
 
-    public void startGUI(){
-
-    }
 
     public static void main(String[] args) {
         Runnable init = new Runnable() {
