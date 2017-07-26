@@ -1,6 +1,8 @@
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
+import javax.swing.*;
+
 /**
  * Created by Filippo on 22/05/2017.
  */
@@ -12,6 +14,5 @@ public interface serverInterface {
     int getMaxPlayers();
 
     Map getMap();
-    void showGui(Graph<Node, DefaultEdge> g);
 
 }

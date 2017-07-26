@@ -1,7 +1,18 @@
+import com.mxgraph.layout.mxFastOrganicLayout;
+import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.view.mxGraphView;
+import com.mxgraph.view.mxStylesheet;
+import org.jgrapht.Graph;
+import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.DefaultEdge;
+
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Hashtable;
 
 /**
  * Created by msnsk on 2017/05/23.
@@ -16,25 +27,68 @@ public class PlayingGUI extends JFrame{
         this.player = player;
 
         setTitle("PlayingGUI");
-        setContentPane(panel1);
+        //setContentPane(panel1);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400,300);
+        setSize(400, 300);
         setLocationRelativeTo(null);
         setVisible(true);
 
         ClientClass client = new ClientClass();
         serverInterface remoteObject = null;
         try {
-            remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
+            remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
 
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         System.out.println("CiaoClient0");
         Map m = remoteObject.getMap();
-        //remoteObject.showGui(m.structure);
+        showMap(m);
+    }
+
+    public void showMap(Map m) {
 
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JGraphXAdapter<Node, DefaultEdge> graphAdapter =
+                new JGraphXAdapter<Node, DefaultEdge>(m.structure);
+
+        mxGraphComponent gracom = new mxGraphComponent(graphAdapter);
+        mxGraphView gravie = graphAdapter.getView();
+
+        Hashtable<String, Object> style = new Hashtable<String, Object>();
+
+        style.put(mxConstants.STYLE_ROUNDED, true);
+        style.put(mxConstants.STYLE_ORTHOGONAL, false);
+        style.put(mxConstants.STYLE_EDGE, "elbowEdgeStyle");
+        style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
+        style.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+        style.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+        style.put(mxConstants.STYLE_STROKECOLOR, "#6482B9"); // default is #6482B9
+        style.put(mxConstants.STYLE_FONTCOLOR, "#446299");
+        style.put(mxConstants.STYLE_NOLABEL, "1");
+
+        mxStylesheet edgeStyle = new mxStylesheet();
+        edgeStyle.setDefaultEdgeStyle(style);
+        graphAdapter.setStylesheet(edgeStyle);
+
+
+        gravie.setScale(1);
+        //Adding panel for padding
+        JPanel p =new JPanel();
+
+        mxIGraphLayout layout = new mxFastOrganicLayout(graphAdapter);
+        layout.execute(graphAdapter.getDefaultParent());
+
+        p.add(gracom);
+
+        add(p);
+        setSize(600, 400);
+
+
+        setLocationByPlatform(true);
+        setVisible(true);
     }
 
 }

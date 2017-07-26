@@ -1,8 +1,6 @@
 import lipermi.exception.LipeRMIException;
 import lipermi.handler.CallHandler;
 import lipermi.net.Server;
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultEdge;
 
 
 import javax.swing.*;
@@ -37,11 +35,6 @@ public class ServerClass implements serverInterface, Serializable {
     public Map getMap(){
         return gameMap.getMap();
     }
-
-    public void showGui(Graph<Node, DefaultEdge> g){
-        gameMap.showGui(g);
-    }
-
 
     public ClientProfile login(String username){
 

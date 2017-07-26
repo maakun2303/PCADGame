@@ -75,7 +75,7 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/lipermi-0.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/lipermi-0.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
