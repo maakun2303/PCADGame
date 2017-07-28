@@ -38,7 +38,7 @@ public class LoginGUI extends JFrame {
                             e1.printStackTrace();
                             JOptionPane.showMessageDialog(null, "Server offline, try again later");
                         }
-                        if(remoteObject.showConnectedPlayers() >= 4) JOptionPane.showMessageDialog(null, "Game is full, try again later");
+                        if(remoteObject.showConnectedPlayers() >= remoteObject.getMaxPlayers()) JOptionPane.showMessageDialog(null, "Game is full, try again later");
                         else {
                             player = remoteObject.login(LoginGUI.Input);
                             if(player.getNickname().equals("tryAgain")) JOptionPane.showMessageDialog(null, "Nickname already picked! Choose a different one");

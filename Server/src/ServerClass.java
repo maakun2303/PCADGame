@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -16,9 +17,9 @@ import java.util.List;
  */
 public class ServerClass implements serverInterface, Serializable {
 
-    List<ClientProfile>  loggedPlayers = new ArrayList<>();
+    static List<ClientProfile>  loggedPlayers = new CopyOnWriteArrayList<ClientProfile>(); //concorrente ?
     boolean b = false; //for team choice
-    private int maxPlayers = 4;
+    private int maxPlayers = 2;
     private Map gameMap;
 
 
@@ -33,7 +34,7 @@ public class ServerClass implements serverInterface, Serializable {
     }
 
     public Map getMap(){
-        return gameMap.getMap();
+        return gameMap;
     }
 
     public ClientProfile login(String username){
@@ -61,7 +62,10 @@ public class ServerClass implements serverInterface, Serializable {
             System.out.println("Game is full");
 
         }
+
+        gameMap.addPlayer(player);
         return player;
+
     }
 
     public boolean removePlayer(ClientProfile player){
@@ -89,9 +93,10 @@ public class ServerClass implements serverInterface, Serializable {
 
 
 
+
+
         server.bind(thePortIWantToBind,callHandler);
         System.out.println("Binding...");
-
 
     }
 }
