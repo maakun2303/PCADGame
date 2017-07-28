@@ -19,6 +19,7 @@ public class LoginGUI extends JFrame {
         setSize(400,300);
         setLocationRelativeTo(null);
         setVisible(true);
+        getRootPane().setDefaultButton(loginButton);
 
         loginButton.addActionListener(new ActionListener() {
             @Override

@@ -1,5 +1,7 @@
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraphView;
@@ -31,7 +33,7 @@ public class PlayingGUI extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
-        setVisible(true);
+        //setVisible(true);
 
         ClientClass client = new ClientClass();
         serverInterface remoteObject = null;
@@ -72,13 +74,15 @@ public class PlayingGUI extends JFrame{
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(style);
         graphAdapter.setStylesheet(edgeStyle);
+        graphAdapter.setCellsSelectable(false);
+        gracom.setConnectable(false);
 
 
         gravie.setScale(1);
         //Adding panel for padding
         JPanel p =new JPanel();
 
-        mxIGraphLayout layout = new mxFastOrganicLayout(graphAdapter);
+        mxIGraphLayout layout = new mxHierarchicalLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
 
         p.add(gracom);
@@ -87,8 +91,26 @@ public class PlayingGUI extends JFrame{
         setSize(600, 400);
 
 
-        setLocationByPlatform(true);
+//        setLocationByPlatform(true);
         setVisible(true);
+
+
+//////Forse da spostare altrove///////
+        gracom.getGraphControl().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Object cell = gracom.getCellAt(e.getX(), e.getY());
+                //mxCell cell =(mxCell) gracom.getCellAt(e.getX(), e.getY());
+                System.out.println("Mouse click in graph component");
+
+                if (cell != null) {
+                    System.out.println("cell=" + graphAdapter.getLabel(cell));
+                    //cell.setStyle("STYLE_FILLCOLOR=#FFFFFF");
+                    graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FFFFFF",new Object[] {cell});
+                }
+            }
+        });
+        /////////////
     }
 
 }
