@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * Created by msnsk on 2017/05/23.
@@ -50,7 +51,6 @@ public class PlayingGUI extends JFrame{
 
     public void showMap(Map m) {
 
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JGraphXAdapter<Node, DefaultEdge> graphAdapter =
@@ -71,10 +71,24 @@ public class PlayingGUI extends JFrame{
         style.put(mxConstants.STYLE_FONTCOLOR, "#446299");
         style.put(mxConstants.STYLE_NOLABEL, "1");
 
+        Iterator<Node> iter = m.structure.vertexSet().iterator();
+        while(iter.hasNext()){
+            Node n = iter.next();
+            if(n.getPlayer().getTeam() == ClientProfile.EnumColor.white){
+                Object cell = graphAdapter.getVertexToCellMap().get(n);
+                graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FFFFFF",new Object[] {cell});
+            }
+            if(n.getPlayer().getTeam() == ClientProfile.EnumColor.red){
+                Object cell = graphAdapter.getVertexToCellMap().get(n);
+                graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FF0000",new Object[] {cell});
+            }
+        }
+
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(style);
         graphAdapter.setStylesheet(edgeStyle);
         graphAdapter.setCellsSelectable(false);
+        graphAdapter.setCellsEditable(false);
         gracom.setConnectable(false);
 
 
