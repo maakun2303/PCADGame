@@ -22,7 +22,7 @@ public class Node implements Serializable {
    @Override
     public String toString() {
        //return String.valueOf(name);
-       return player.getNickname() + " " + player.getTeam();
+       return player.getNickname();
    }
 
     public ClientProfile getPlayer() {

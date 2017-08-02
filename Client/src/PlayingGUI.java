@@ -30,11 +30,9 @@ public class PlayingGUI extends JFrame{
         this.player = player;
 
         setTitle("PlayingGUI");
-        //setContentPane(panel1);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
-        //setVisible(true);
 
         ClientClass client = new ClientClass();
         serverInterface remoteObject = null;
@@ -44,9 +42,10 @@ public class PlayingGUI extends JFrame{
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        System.out.println("CiaoClient0");
+
         Map m = remoteObject.getMap();
         showMap(m);
+        remoteObject.movePlayer(player);
     }
 
     public void showMap(Map m) {
@@ -125,6 +124,6 @@ public class PlayingGUI extends JFrame{
             }
         });
         /////////////
-    }//boh
+    }
 
 }

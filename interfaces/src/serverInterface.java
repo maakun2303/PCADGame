@@ -14,5 +14,5 @@ public interface serverInterface {
     int getMaxPlayers();
 
     Map getMap();
-
+    void movePlayer(ClientProfile player);
 }

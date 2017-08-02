@@ -7,6 +7,7 @@ public class ClientProfile implements Serializable{
 
     private String nickname;
     private EnumColor team;
+    private Node position;
 
     public void setNickname(String n) {
         this.nickname = n;
@@ -25,6 +26,14 @@ public class ClientProfile implements Serializable{
 
     public EnumColor getTeam() {
         return this.team;
+    }
+
+    public Node getPosition() {
+        return position;
+    }
+
+    public void setPosition(Node position) {
+        this.position = position;
     }
 
     enum EnumColor {

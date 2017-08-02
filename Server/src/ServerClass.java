@@ -37,6 +37,11 @@ public class ServerClass implements serverInterface, Serializable {
         return gameMap;
     }
 
+    @Override
+    public void movePlayer(ClientProfile player) {
+        gameMap.movePlayer(player);
+    }
+
     public ClientProfile login(String username){
 
         ClientProfile player = new ClientProfile();
