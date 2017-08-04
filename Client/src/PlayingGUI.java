@@ -9,7 +9,6 @@ import com.mxgraph.view.mxStylesheet;
 import org.jgrapht.Graph;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
-import com.google.common.collect.*;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -76,8 +75,8 @@ public class PlayingGUI extends JFrame{
             boolean someoneWhite = false;
             boolean someoneRed = false;
             Node n = iter.next();
-            if(m.positions.get(n) != null) {
-                Iterator<ClientProfile> iterProf = m.positions.get(n).iterator();
+            if(n.getUsers() != null) {
+                Iterator<ClientProfile> iterProf = n.getUsers().iterator();
                 while (iterProf.hasNext()) {
                     ClientProfile cp = iterProf.next();
                     if (cp.getTeam() == ClientProfile.EnumColor.white) {

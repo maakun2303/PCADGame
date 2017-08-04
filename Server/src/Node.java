@@ -1,20 +1,39 @@
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Random;
 
 public class Node implements Serializable {
     public int name;
     public int ammo;
     static int id = 0;
+    HashSet<ClientProfile> users;
 
     Node() {
         name = id++;
         Random rand = new Random();
         ammo = rand.nextInt(10);
+        users = new HashSet<ClientProfile>();
     }
 
    @Override
     public String toString() {
        return String.valueOf(name);
+   }
+
+   public HashSet<ClientProfile> getUsers(){
+        return users;
+   }
+
+   public void addUser(ClientProfile player){
+       users.add(player);
+   }
+
+    public void removeUser(ClientProfile player){
+        users.remove(player);
+    }
+
+   public void setUsers(HashSet<ClientProfile> users){
+       this.users = users;
    }
 
    @Override
@@ -25,7 +44,7 @@ public class Node implements Serializable {
             return false;
         }
         Node node = (Node) o;
-        return node.name == name && node.ammo == ammo;
+        return node.name == name && node.ammo == ammo && users.equals(users);
     }
 
     @Override
@@ -33,6 +52,7 @@ public class Node implements Serializable {
         int result = 17;
         result = 31 * result + name;
         result = 31 * result + ammo;
+        result = 31 * result + users.hashCode();
         return result;
     }
 }
