@@ -7,7 +7,6 @@ public class ClientProfile implements Serializable{
 
     private String nickname;
     private EnumColor team;
-    //private Node position;
 
     public void setNickname(String n) {
         this.nickname = n;

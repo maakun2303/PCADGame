@@ -46,7 +46,7 @@ public class PlayingGUI extends JFrame{
 
         Map m = remoteObject.getMap();
         showMap(m);
-        remoteObject.movePlayer(player);
+        //remoteObject.movePlayer(player,n);
     }
 
     public void showMap(Map m) {
@@ -73,6 +73,8 @@ public class PlayingGUI extends JFrame{
 
         Iterator<Node> iter = m.structure.vertexSet().iterator();
         while(iter.hasNext()){
+            boolean someoneWhite = false;
+            boolean someoneRed = false;
             Node n = iter.next();
             if(m.positions.get(n) != null) {
                 Iterator<ClientProfile> iterProf = m.positions.get(n).iterator();
@@ -80,11 +82,15 @@ public class PlayingGUI extends JFrame{
                     ClientProfile cp = iterProf.next();
                     if (cp.getTeam() == ClientProfile.EnumColor.white) {
                         Object cell = graphAdapter.getVertexToCellMap().get(n);
-                        graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", new Object[]{cell});
+                        if(someoneRed == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", new Object[]{cell});
+                        else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
+                        someoneWhite = true;
                     }
                     if (cp.getTeam() == ClientProfile.EnumColor.red) {
                         Object cell = graphAdapter.getVertexToCellMap().get(n);
-                        graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FF0000", new Object[]{cell});
+                        if(someoneWhite == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FF0000", new Object[]{cell});
+                        else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
+                        someoneRed = true;
                     }
                 }
             }

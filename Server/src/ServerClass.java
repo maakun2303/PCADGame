@@ -33,13 +33,10 @@ public class ServerClass implements serverInterface, Serializable {
         });
     }
 
-    public Map getMap(){
-        return gameMap;
-    }
 
     @Override
-    public void movePlayer(ClientProfile player) {
-        gameMap.movePlayer(player);
+    public void movePlayer(ClientProfile player, Node oldPosition, Node newPosition) {
+        gameMap.movePlayer(player, oldPosition, newPosition);
     }
 
     public ClientProfile login(String username){
@@ -81,6 +78,10 @@ public class ServerClass implements serverInterface, Serializable {
     public int showConnectedPlayers(){return loggedPlayers.size();}
     public int getMaxPlayers(){return maxPlayers;}
 
+    @Override
+    public Map getMap() {
+        return gameMap;
+    }
 
 
     public static void main(String[] args) throws IOException, LipeRMIException {
@@ -92,6 +93,7 @@ public class ServerClass implements serverInterface, Serializable {
 
 
         callHandler.registerGlobal(serverInterface.class,interfaceImplementation);
+
 
         Server server = new Server();
         int thePortIWantToBind = 4455;
