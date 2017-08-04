@@ -1,8 +1,4 @@
-import com.sun.xml.internal.ws.policy.sourcemodel.ModelNode;
-import lipermi.exception.LipeRMIException;
-import lipermi.handler.CallHandler;
-import lipermi.net.Server;
-import org.jgrapht.Graph;
+
 import org.jgrapht.generate.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.VertexFactory;
@@ -47,16 +43,22 @@ public class Map implements Serializable{
             if(n.name == randNum){
                 n.setPlayer(player);
                 player.setPosition(n);
+                System.out.println("Dentro add player sono " + player.getPosition());
             }
         }
-        movePlayer(player);
+
     }
+
 
     public Map getMap() {
         return this;
     }
 
     public void movePlayer(ClientProfile player) {
+        System.out.println("Dentro move player sono " + player.getPosition());
+        System.out.println(structure.containsVertex(player.getPosition()));
+        System.out.println(structure.vertexSet());
+
         Set<DefaultEdge> edgeSet = this.structure.edgesOf(player.getPosition());
         Iterator<DefaultEdge> iterator = edgeSet.iterator();
 
@@ -66,7 +68,7 @@ public class Map implements Serializable{
             if(this.structure.getEdgeTarget(edge) != player.getPosition()) allNodes.add(this.structure.getEdgeTarget(edge));
             else allNodes.add(this.structure.getEdgeSource(edge));
 
-            System.out.println(allNodes.toString());
+           // System.out.println(allNodes.toString());
         }
 
 

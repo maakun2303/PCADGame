@@ -45,6 +45,7 @@ public class PlayingGUI extends JFrame{
 
         Map m = remoteObject.getMap();
         showMap(m);
+        System.out.println("Dentro il client sono" + player.getPosition());
         remoteObject.movePlayer(player);
     }
 

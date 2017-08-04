@@ -54,7 +54,8 @@ public class ClientProfile implements Serializable{
         ClientProfile profile = (ClientProfile) o;
 
         return profile.nickname.equals(nickname) &&
-                profile.team == team;
+                profile.team == team &&
+                profile.position.equals(position);
     }
 
     @Override
@@ -62,6 +63,7 @@ public class ClientProfile implements Serializable{
         int result = 17;
         result = 31 * result + nickname.hashCode();
         result = 31 * result + team.hashCode();
+        result = 31 * result + position.hashCode();
         return result;
     }
 
