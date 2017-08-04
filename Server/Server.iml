@@ -70,7 +70,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="jar://D:/ダウンロード/Telegram Desktop/lipermi-0.4.jar!/" />
@@ -84,6 +84,15 @@
       <library>
         <CLASSES>
           <root url="jar://$USER_HOME$/Downloads/lipermi-0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://D:/ダウンロード/guava-23.0-rc1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

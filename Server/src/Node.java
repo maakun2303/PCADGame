@@ -3,7 +3,6 @@ import java.util.Random;
 
 public class Node implements Serializable {
     public int name;
-    private ClientProfile player;
     public int ammo;
     static int id = 0;
 
@@ -11,21 +10,29 @@ public class Node implements Serializable {
         name = id++;
         Random rand = new Random();
         ammo = rand.nextInt(10);
-        player =  new ClientProfile();
     }
-
-    public void setPlayer(ClientProfile player){
-        this.player = player;
-    }
-
 
    @Override
     public String toString() {
-       //return String.valueOf(name);
-       return player.getNickname();
+       return String.valueOf(name);
    }
 
-    public ClientProfile getPlayer() {
-        return player;
+   @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof Node)) {
+            return false;
+        }
+        Node node = (Node) o;
+        return node.name == name && node.ammo == ammo;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + name;
+        result = 31 * result + ammo;
+        return result;
     }
 }

@@ -9,6 +9,7 @@ import com.mxgraph.view.mxStylesheet;
 import org.jgrapht.Graph;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
+import com.google.common.collect.*;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -73,13 +74,19 @@ public class PlayingGUI extends JFrame{
         Iterator<Node> iter = m.structure.vertexSet().iterator();
         while(iter.hasNext()){
             Node n = iter.next();
-            if(n.getPlayer().getTeam() == ClientProfile.EnumColor.white){
-                Object cell = graphAdapter.getVertexToCellMap().get(n);
-                graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FFFFFF",new Object[] {cell});
-            }
-            if(n.getPlayer().getTeam() == ClientProfile.EnumColor.red){
-                Object cell = graphAdapter.getVertexToCellMap().get(n);
-                graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FF0000",new Object[] {cell});
+            if(m.positions.get(n) != null) {
+                Iterator<ClientProfile> iterProf = m.positions.get(n).iterator();
+                while (iterProf.hasNext()) {
+                    ClientProfile cp = iterProf.next();
+                    if (cp.getTeam() == ClientProfile.EnumColor.white) {
+                        Object cell = graphAdapter.getVertexToCellMap().get(n);
+                        graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", new Object[]{cell});
+                    }
+                    if (cp.getTeam() == ClientProfile.EnumColor.red) {
+                        Object cell = graphAdapter.getVertexToCellMap().get(n);
+                        graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FF0000", new Object[]{cell});
+                    }
+                }
             }
         }
 
