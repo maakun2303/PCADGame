@@ -7,6 +7,7 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 import org.jgrapht.Graph;
+import org.jgrapht.alg.NeighborIndex;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -45,6 +46,9 @@ public class PlayingGUI extends JFrame{
 
         Map m = remoteObject.getMap();
         showMap(m);
+
+        NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(m.structure);
+        System.out.println(m.adjacentNodes(m.getNode(7)));
         //remoteObject.movePlayer(player,n);
     }
 

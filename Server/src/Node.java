@@ -44,7 +44,7 @@ public class Node implements Serializable {
             return false;
         }
         Node node = (Node) o;
-        return node.name == name && node.ammo == ammo && users.equals(users);
+        return node.name == name && node.ammo == ammo && node.users.equals(users);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Node implements Serializable {
         int result = 17;
         result = 31 * result + name;
         result = 31 * result + ammo;
-        result = 31 * result + users.hashCode();
+        //result = result + users.hashCode();
         return result;
     }
 }

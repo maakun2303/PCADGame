@@ -1,22 +1,17 @@
-import com.sun.xml.internal.ws.policy.sourcemodel.ModelNode;
-import lipermi.exception.LipeRMIException;
-import lipermi.handler.CallHandler;
-import lipermi.net.Server;
-import org.antlr.v4.runtime.misc.MultiMap;
-import org.jgrapht.Graph;
+import org.jgrapht.alg.NeighborIndex;
 import org.jgrapht.generate.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.VertexFactory;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
 public class Map implements Serializable{
 
-    SimpleGraph<Node, DefaultEdge>structure;
+    SimpleGraph<Node, DefaultEdge> structure;
 
-    private Node getNode(int i) {
+
+    public Node getNode(int i) {
         Iterator<Node> iter = structure.vertexSet().iterator();
         while (iter.hasNext()) {
             Node n = iter.next();
@@ -25,6 +20,11 @@ public class Map implements Serializable{
             }
         }
         return null;
+    }
+
+    public Set<Node> adjacentNodes(Node node) {
+        NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(structure);
+        return ngbr.neighborsOf(node);
     }
 
     public Map() {
@@ -45,7 +45,7 @@ public class Map implements Serializable{
         }
     };
 
-    public void addPlayer (ClientProfile player){
+    public void addPlayer(ClientProfile player){
 
         Random rand = new Random();
         int randNum = rand.nextInt(10);
@@ -57,7 +57,7 @@ public class Map implements Serializable{
         aux.setUsers(set);
 
         movePlayer(player,aux,getNode(7));
-
+        adjacentNodes(getNode(7));
     }
 
     public Map getMap() {
