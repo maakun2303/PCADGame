@@ -41,19 +41,18 @@ public class ServerClass implements serverInterface, Serializable {
 
     public ClientProfile login(String username){
 
+        for(ClientProfile item: loggedPlayers){
+            if(item.getNickname().equals(username)){
+                System.out.println("An user used an existing nickname");
+                return new ClientProfile("");
+            }
+        }
+
         ClientProfile player = new ClientProfile();
         player.setNickname(username);
 
         b = (b) ? false : true;
 
-
-
-        for(ClientProfile item: loggedPlayers){
-            if(item.getNickname().equals(username)){
-                System.out.println("An user used an existing nickname");
-                return new ClientProfile("tryAgain");
-            }
-        }
 
         player.setTeam(b);
         loggedPlayers.add(player);

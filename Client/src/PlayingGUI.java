@@ -1,22 +1,31 @@
+import com.mxgraph.canvas.mxBasicCanvas;
+import com.mxgraph.layout.*;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.layout.mxFastOrganicLayout;
-import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.layout.orthogonal.mxOrthogonalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxRectangle;
+import com.mxgraph.view.mxCellState;
+import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
+import org.jgraph.JGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.NeighborIndex;
+import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by msnsk on 2017/05/23.
@@ -25,6 +34,7 @@ public class PlayingGUI extends JFrame{
     private JPanel panel1;
     private JLabel label1;
     private ClientProfile player;
+    private Map map;
 
 
     public PlayingGUI(ClientProfile player) {
@@ -44,23 +54,79 @@ public class PlayingGUI extends JFrame{
             e1.printStackTrace();
         }
 
-        Map m = remoteObject.getMap();
-        showMap(m);
+        map = remoteObject.getMap();
+        showMap();
 
+        /*
         NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(m.structure);
-        System.out.println(m.adjacentNodes(m.getNode(7)));
+        m.getNode(player);
+        System.out.println(m.adjacentNodes(m.getNode(player)));
         //remoteObject.movePlayer(player,n);
+        */
     }
 
-    public void showMap(Map m) {
+    public void setAdjacentNodesColor(JGraphXAdapter<Node, DefaultEdge> graphAdapter){
+        NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(map.structure);
+        Set<Node> nodes = map.adjacentNodes(map.getNode(player));
+        Iterator<Node> iter = nodes.iterator();
+        while(iter.hasNext()){
+            Node n = iter.next();
+            Object cell = graphAdapter.getVertexToCellMap().get(n);
+            graphAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, "#00FF00", new Object[]{cell});
+            graphAdapter.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "3", new Object[]{cell});
+        }
+
+
+    }
+
+
+
+    public void setNodeColor(JGraphXAdapter<Node, DefaultEdge> graphAdapter){
+        Iterator<Node> iter = map.structure.vertexSet().iterator();
+        while(iter.hasNext()){
+            boolean someoneWhite = false;
+            boolean someoneRed = false;
+            Node n = iter.next();
+            Object cell = graphAdapter.getVertexToCellMap().get(n);
+            mxRectangle rc = new mxRectangle(0,0,45,45);
+            graphAdapter.resizeCells(new Object[]{cell},new mxRectangle[]{rc});
+            if(n.getUsers() != null) {
+                Iterator<ClientProfile> iterProf = n.getUsers().iterator();
+                while (iterProf.hasNext()) {
+                    ClientProfile cp = iterProf.next();
+                    if (cp.getTeam() == ClientProfile.EnumColor.white) {
+                        //cell = graphAdapter.getVertexToCellMap().get(n);
+                        if(someoneRed == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", new Object[]{cell});
+                        else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
+                        someoneWhite = true;
+                    }
+                    if (cp.getTeam() == ClientProfile.EnumColor.red) {
+                        //cell = graphAdapter.getVertexToCellMap().get(n);
+                        if(someoneWhite == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FF0000", new Object[]{cell});
+                        else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
+                        someoneRed = true;
+                    }
+                }
+            }
+        }
+        setAdjacentNodesColor(graphAdapter);
+    }
+
+    public void showMap() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JGraphXAdapter<Node, DefaultEdge> graphAdapter =
-                new JGraphXAdapter<Node, DefaultEdge>(m.structure);
+        JGraphXAdapter<Node, DefaultEdge> graphAdapter = new JGraphXAdapter<Node, DefaultEdge>(map.structure);
 
-        mxGraphComponent gracom = new mxGraphComponent(graphAdapter);
+        mxRectangle rec = new mxRectangle(10.0,10.0,400.0,400.0);
+        graphAdapter.setMaximumGraphBounds(rec);
+        //graphAdapter.setMinimumGraphSize(rec);
+        graphAdapter.setCellsSelectable(false);
+        graphAdapter.setCellsEditable(false);
+        graphAdapter.setCollapseToPreferredSize(true);
+
         mxGraphView gravie = graphAdapter.getView();
+
 
         Hashtable<String, Object> style = new Hashtable<String, Object>();
 
@@ -73,54 +139,34 @@ public class PlayingGUI extends JFrame{
         style.put(mxConstants.STYLE_STROKECOLOR, "#6482B9"); // default is #6482B9
         style.put(mxConstants.STYLE_FONTCOLOR, "#446299");
         style.put(mxConstants.STYLE_NOLABEL, "1");
+        style.put(mxConstants.STYLE_ALIGN,"center");
 
-        Iterator<Node> iter = m.structure.vertexSet().iterator();
-        while(iter.hasNext()){
-            boolean someoneWhite = false;
-            boolean someoneRed = false;
-            Node n = iter.next();
-            if(n.getUsers() != null) {
-                Iterator<ClientProfile> iterProf = n.getUsers().iterator();
-                while (iterProf.hasNext()) {
-                    ClientProfile cp = iterProf.next();
-                    if (cp.getTeam() == ClientProfile.EnumColor.white) {
-                        Object cell = graphAdapter.getVertexToCellMap().get(n);
-                        if(someoneRed == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", new Object[]{cell});
-                        else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
-                        someoneWhite = true;
-                    }
-                    if (cp.getTeam() == ClientProfile.EnumColor.red) {
-                        Object cell = graphAdapter.getVertexToCellMap().get(n);
-                        if(someoneWhite == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FF0000", new Object[]{cell});
-                        else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
-                        someoneRed = true;
-                    }
-                }
-            }
-        }
+        setNodeColor(graphAdapter);
 
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(style);
         graphAdapter.setStylesheet(edgeStyle);
-        graphAdapter.setCellsSelectable(false);
-        graphAdapter.setCellsEditable(false);
-        gracom.setConnectable(false);
+        //gravie.setScale(2);
 
 
-        gravie.setScale(1);
+        //gravie.setScale(1);
         //Adding panel for padding
         JPanel p =new JPanel();
 
         mxIGraphLayout layout = new mxHierarchicalLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
 
-        p.add(gracom);
+        mxGraphComponent gracom = new mxGraphComponent(graphAdapter);
+        gracom.setConnectable(false);
+        p.setLayout(new BorderLayout());
+        p.add(gracom,BorderLayout.CENTER);
 
         add(p);
-        setSize(600, 400);
 
 
 //        setLocationByPlatform(true);
+        pack();
+        setLocationByPlatform(true);
         setVisible(true);
 
 

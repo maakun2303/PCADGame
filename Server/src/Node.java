@@ -17,7 +17,11 @@ public class Node implements Serializable {
 
    @Override
     public String toString() {
-       return String.valueOf(name);
+        String aux = "";
+        for(ClientProfile cp : users) {
+            aux = aux + cp.getNickname() + "\n";
+        }
+        return aux;
    }
 
    public HashSet<ClientProfile> getUsers(){
