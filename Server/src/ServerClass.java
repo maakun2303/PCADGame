@@ -9,20 +9,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
  * Created by Filippo on 22/05/2017.
  */
-public class ServerClass implements serverInterface, Serializable {
+public class ServerClass extends Observable implements serverInterface, Serializable {
 
     static List<ClientProfile>  loggedPlayers = new CopyOnWriteArrayList<ClientProfile>(); //concorrente ?
     boolean b = false; //for team choice
     private int maxPlayers = 2;
     private Map gameMap;
 
+    private class WrappedObserver implements Observer, Serializable {
 
+    }
+
+    @Override
     public ServerClass(){
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -35,8 +41,8 @@ public class ServerClass implements serverInterface, Serializable {
 
 
     @Override
-    public void movePlayer(ClientProfile player, Node oldPosition, Node newPosition) {
-        gameMap.movePlayer(player, oldPosition, newPosition);
+    public void movePlayer(ClientProfile player, int newPosition) {
+        gameMap.movePlayer(player, newPosition);
     }
 
     public ClientProfile login(String username){
@@ -76,6 +82,11 @@ public class ServerClass implements serverInterface, Serializable {
 
     public int showConnectedPlayers(){return loggedPlayers.size();}
     public int getMaxPlayers(){return maxPlayers;}
+
+    @Override
+    public void addObserver(RemoteObserver o) {
+        WrappedObserver mo = new WrappedObserver(o);
+    }
 
     @Override
     public Map getMap() {

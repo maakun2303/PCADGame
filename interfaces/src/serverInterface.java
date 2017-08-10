@@ -12,7 +12,8 @@ public interface serverInterface {
     int showConnectedPlayers();
     boolean removePlayer(ClientProfile player);
     int getMaxPlayers();
+    void addObserver(RemoteObserver o);
 
     Map getMap();
-    void movePlayer(ClientProfile player, Node oldPosition, Node newPosition);
+    void movePlayer(ClientProfile player, int newPosition);
 }

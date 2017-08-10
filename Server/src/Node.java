@@ -32,9 +32,7 @@ public class Node implements Serializable {
        users.add(player);
    }
 
-    public void removeUser(ClientProfile player){
-        users.remove(player);
-    }
+    public void removeUser(ClientProfile player){ System.out.println(users.toString()); users.remove(player); System.out.println(users.toString());}
 
    public void setUsers(HashSet<ClientProfile> users){
        this.users = users;

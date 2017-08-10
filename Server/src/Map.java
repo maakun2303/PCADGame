@@ -72,9 +72,16 @@ public class Map implements Serializable{
         return this;
     }
 
-    public void movePlayer(ClientProfile player, Node oldPosition, Node newPosition) {
-        oldPosition.removeUser(player);
-        newPosition.addUser(player);
+    public void movePlayer(ClientProfile player, int newPosition) {
+//        System.out.println("Player stava in "+getNode(player).name +" e vuole andare in: "+newPosition.name);
+        if(getNode(player) != null) {
+            System.out.println("cesta!");
+            getNode(player).removeUser(player);
+            getNode(newPosition).addUser(player); //ok
+            //cambi stato di un oggetto del server
+        }
+        else { System.out.println("uncesta!"); }
+        //System.out.println("Ho spostato il player su "+getNode(player).name+" ("+newPosition.name+")");
     }
 }
 

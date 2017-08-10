@@ -3,7 +3,7 @@ import lipermi.net.Client;
 import java.io.IOException;
 
 
-public class ClientClass {
+public class ClientClass implements RemoteObserver{
 
     static final String remoteHost = "localhost";
     static final int portWasBinded = 4455;
@@ -19,5 +19,9 @@ public class ClientClass {
         return remoteObject;
     }
 
+    @Override
+    public void update(Object observable, Object updateMsg) {
+        System.out.println("got message:" + updateMsg);
+    }
 }
 

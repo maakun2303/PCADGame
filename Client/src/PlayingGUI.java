@@ -20,6 +20,8 @@ import org.jgrapht.graph.DefaultEdge;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -56,17 +58,9 @@ public class PlayingGUI extends JFrame{
 
         map = remoteObject.getMap();
         showMap();
-
-        /*
-        NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(m.structure);
-        m.getNode(player);
-        System.out.println(m.adjacentNodes(m.getNode(player)));
-        //remoteObject.movePlayer(player,n);
-        */
     }
 
     public void setAdjacentNodesColor(JGraphXAdapter<Node, DefaultEdge> graphAdapter){
-        NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(map.structure);
         Set<Node> nodes = map.adjacentNodes(map.getNode(player));
         Iterator<Node> iter = nodes.iterator();
         while(iter.hasNext()){
@@ -75,10 +69,50 @@ public class PlayingGUI extends JFrame{
             graphAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, "#00FF00", new Object[]{cell});
             graphAdapter.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "3", new Object[]{cell});
         }
-
-
     }
 
+    public void move(mxGraphComponent gracom, JGraphXAdapter<Node, DefaultEdge> graphAdapter){
+        Set<Node> adjnodes = map.adjacentNodes(map.getNode(player));
+
+        gracom.getGraphControl().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Object cell = gracom.getCellAt(e.getX(), e.getY());
+                //mxCell cell =(mxCell) gracom.getCellAt(e.getX(), e.getY());
+                System.out.println("Mouse click in graph component");
+
+                if (cell != null && adjnodes.contains(graphAdapter.getCellToVertexMap().get(cell))) {
+                    System.out.println("cell=" + graphAdapter.getLabel(cell));
+                    //cell.setStyle("STYLE_FILLCOLOR=#FFFFFF");
+                    //graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FFFFFF",new Object[] {cell});
+
+                    ClientClass client = new ClientClass();
+                    serverInterface remoteObject = null;
+                    try {
+                        remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
+
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    remoteObject.movePlayer(player, graphAdapter.getCellToVertexMap().get(cell).name);
+
+                    try {
+                        remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
+
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    map = remoteObject.getMap();
+                    panel1.removeAll();
+                    showMap();
+
+                    panel1.revalidate();
+                    panel1.repaint();
+                }
+            }
+        });
+    }
 
 
     public void setNodeColor(JGraphXAdapter<Node, DefaultEdge> graphAdapter){
@@ -120,13 +154,9 @@ public class PlayingGUI extends JFrame{
 
         mxRectangle rec = new mxRectangle(10.0,10.0,400.0,400.0);
         graphAdapter.setMaximumGraphBounds(rec);
-        //graphAdapter.setMinimumGraphSize(rec);
         graphAdapter.setCellsSelectable(false);
         graphAdapter.setCellsEditable(false);
         graphAdapter.setCollapseToPreferredSize(true);
-
-        mxGraphView gravie = graphAdapter.getView();
-
 
         Hashtable<String, Object> style = new Hashtable<String, Object>();
 
@@ -146,46 +176,22 @@ public class PlayingGUI extends JFrame{
         mxStylesheet edgeStyle = new mxStylesheet();
         edgeStyle.setDefaultEdgeStyle(style);
         graphAdapter.setStylesheet(edgeStyle);
-        //gravie.setScale(2);
-
-
-        //gravie.setScale(1);
-        //Adding panel for padding
-        JPanel p =new JPanel();
 
         mxIGraphLayout layout = new mxHierarchicalLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
 
         mxGraphComponent gracom = new mxGraphComponent(graphAdapter);
         gracom.setConnectable(false);
-        p.setLayout(new BorderLayout());
-        p.add(gracom,BorderLayout.CENTER);
+        panel1.setLayout(new BorderLayout());
+        panel1.add(gracom,BorderLayout.CENTER);
 
-        add(p);
+        add(panel1);
 
+        move(gracom, graphAdapter);
 
-//        setLocationByPlatform(true);
         pack();
-        setLocationByPlatform(true);
+        //setLocationByPlatform(true);
         setVisible(true);
-
-
-//////Forse da spostare altrove///////
-        gracom.getGraphControl().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                Object cell = gracom.getCellAt(e.getX(), e.getY());
-                //mxCell cell =(mxCell) gracom.getCellAt(e.getX(), e.getY());
-                System.out.println("Mouse click in graph component");
-
-                if (cell != null) {
-                    System.out.println("cell=" + graphAdapter.getLabel(cell));
-                    //cell.setStyle("STYLE_FILLCOLOR=#FFFFFF");
-                    graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FFFFFF",new Object[] {cell});
-                }
-            }
-        });
-        /////////////
     }
 
 }
