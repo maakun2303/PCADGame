@@ -1,31 +1,21 @@
-import com.mxgraph.canvas.mxBasicCanvas;
 import com.mxgraph.layout.*;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.layout.orthogonal.mxOrthogonalLayout;
-import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
-import com.mxgraph.view.mxCellState;
-import com.mxgraph.view.mxGraph;
-import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
-import org.jgraph.JGraph;
-import org.jgrapht.Graph;
-import org.jgrapht.alg.NeighborIndex;
-import org.jgrapht.ext.JGraphModelAdapter;
+import lipermi.handler.CallHandler;
+import lipermi.net.Client;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
@@ -33,7 +23,8 @@ import java.util.Set;
 /**
  * Created by msnsk on 2017/05/23.
  */
-public class PlayingGUI extends JFrame{
+public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
+    private JFrame frame1;
     private JPanel panel1;
     private JLabel label1;
     private ClientProfile player;
@@ -41,12 +32,14 @@ public class PlayingGUI extends JFrame{
 
 
     public PlayingGUI(ClientProfile player) throws RemoteException {
+
         this.player = player;
 
-        setTitle("PlayingGUI");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
-        setLocationRelativeTo(null);
+        frame1 = new JFrame();
+        frame1.setTitle("PlayingGUI");
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.setSize(400, 300);
+        frame1.setLocationRelativeTo(null);
 
         ClientClass client = new ClientClass();
         serverInterface remoteObject = null;
@@ -58,6 +51,17 @@ public class PlayingGUI extends JFrame{
         }
 
         map = remoteObject.getMap();
+
+        /////
+        try {
+            remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
+
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        remoteObject.addObserver(this);
+        /////
+
         showMap();
     }
 
@@ -72,7 +76,7 @@ public class PlayingGUI extends JFrame{
         }
     }
 
-    public void move(mxGraphComponent gracom, JGraphXAdapter<Node, DefaultEdge> graphAdapter){
+    public void move(mxGraphComponent gracom, JGraphXAdapter<Node, DefaultEdge> graphAdapter) throws RemoteException {
         Set<Node> adjnodes = map.adjacentNodes(map.getNode(player));
 
         gracom.getGraphControl().addMouseListener(new MouseAdapter() {
@@ -111,7 +115,11 @@ public class PlayingGUI extends JFrame{
 
                     map = remoteObject.getMap();
                     panel1.removeAll();
-                    showMap();
+                    try {
+                        showMap();
+                    } catch (RemoteException e1) {
+                        e1.printStackTrace();
+                    }
 
                     panel1.revalidate();
                     panel1.repaint();
@@ -121,7 +129,7 @@ public class PlayingGUI extends JFrame{
     }
 
 
-    public void setNodeColor(JGraphXAdapter<Node, DefaultEdge> graphAdapter){
+    public void setNodeColor(JGraphXAdapter<Node, DefaultEdge> graphAdapter) throws RemoteException {
         Iterator<Node> iter = map.structure.vertexSet().iterator();
         while(iter.hasNext()){
             boolean someoneWhite = false;
@@ -152,9 +160,9 @@ public class PlayingGUI extends JFrame{
         setAdjacentNodesColor(graphAdapter);
     }
 
-    public void showMap() {
+    public void showMap() throws RemoteException {
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JGraphXAdapter<Node, DefaultEdge> graphAdapter = new JGraphXAdapter<Node, DefaultEdge>(map.structure);
 
@@ -191,13 +199,22 @@ public class PlayingGUI extends JFrame{
         panel1.setLayout(new BorderLayout());
         panel1.add(gracom,BorderLayout.CENTER);
 
-        add(panel1);
+        frame1.add(panel1);
 
         move(gracom, graphAdapter);
 
-        pack();
+        frame1.pack();
         //setLocationByPlatform(true);
-        setVisible(true);
+        frame1.setVisible(true);
     }
 
+    @Override
+    public void update(Object observable, Object updateMsg) throws RemoteException {
+        map = (Map) updateMsg;
+        panel1.removeAll();
+        showMap();
+
+        panel1.revalidate();
+        panel1.repaint();
+    }
 }

@@ -1,3 +1,7 @@
+import lipermi.exception.LipeRMIException;
+import lipermi.handler.CallHandler;
+import lipermi.net.Client;
+import lipermi.net.Server;
 import org.jgraph.JGraph;
 import org.jgrapht.alg.NeighborIndex;
 import org.jgrapht.ext.JGraphModelAdapter;
@@ -5,13 +9,16 @@ import org.jgrapht.generate.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.VertexFactory;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.*;
+
+import static java.lang.Thread.sleep;
 
 public class Map implements Serializable{
 
     SimpleGraph<Node, DefaultEdge> structure;
-
 
     public Node getNode(int i) {
         Iterator<Node> iter = structure.vertexSet().iterator();

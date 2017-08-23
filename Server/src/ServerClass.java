@@ -2,7 +2,6 @@ import lipermi.exception.LipeRMIException;
 import lipermi.handler.CallHandler;
 import lipermi.net.Server;
 
-
 import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
@@ -15,71 +14,42 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by Filippo on 22/05/2017.
  */
-public class ServerClass extends Observable implements serverInterface, Serializable {
+public class ServerClass extends Observable implements serverInterface {
 
-    static List<ClientProfile>  loggedPlayers = new CopyOnWriteArrayList<ClientProfile>(); //concorrente ?
+    static List<ClientProfile> loggedPlayers = new CopyOnWriteArrayList<ClientProfile>(); //concorrente ?
     boolean b = false; //for team choice
     private int maxPlayers = 2;
     private Map gameMap;
 
     private class WrappedObserver implements Observer, Serializable {
-            private static final long serialVersionUID = 1L;
-            private RemoteObserver ro = null;
-            public WrappedObserver(RemoteObserver ro){
-                this.ro = ro;
-            }
+        private static final long serialVersionUID = 1L;
+        private RemoteObserver ro = null;
+
+        public WrappedObserver(RemoteObserver ro) {
+            this.ro = ro;
+        }
+
         @Override
-        public void update(Observable o, Object arg){
-            ro.update(o.toString(),arg);
+        public void update(Observable o, Object arg) {
+            try {
+                ro.update(o.toString(), arg);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    @Override
-    public void addObserver(RemoteObserver o) throws RemoteException{
-        WrappedObserver mo = new WrappedObserver(o);
-        addObserver(mo);
-        System.out.println("Added observer:" + mo);
-    }
 
-    Thread thread = new Thread(){
-        @Override
-        public void run(){
-            while (true) {
-                try {
-                    Thread.sleep(5 * 1000);
-                } catch (InterruptedException e) {
-                    //ignore
-                }
-                setChanged();
-                notifyObservers(new Date());
-            }
-        };
-    };
-
-    public ServerClass(){
-        thread.start();
-    }
-
-
-   /* public ServerClass(){
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                gameMap = new Map();
-                System.out.println("Ciao ci sono");
-            }
-
-        });*/
-
-
-    @Override
     public void movePlayer(ClientProfile player, int newPosition) {
         gameMap.movePlayer(player, newPosition);
+        setChanged();
+        notifyObservers(getMap());
     }
 
-    public ClientProfile login(String username){
+    public ClientProfile login(String username) {
 
-        for(ClientProfile item: loggedPlayers){
-            if(item.getNickname().equals(username)){
+        for (ClientProfile item : loggedPlayers) {
+            if (item.getNickname().equals(username)) {
                 System.out.println("An user used an existing nickname");
                 return new ClientProfile("");
             }
@@ -96,7 +66,7 @@ public class ServerClass extends Observable implements serverInterface, Serializ
 
         System.out.println("Total players: " + loggedPlayers.size());
 
-        if(loggedPlayers.size() == maxPlayers){
+        if (loggedPlayers.size() == maxPlayers) {
             System.out.println("Game is full");
 
         }
@@ -106,40 +76,69 @@ public class ServerClass extends Observable implements serverInterface, Serializ
 
     }
 
-    public boolean removePlayer(ClientProfile player){
+    public boolean removePlayer(ClientProfile player) {
         boolean ok = loggedPlayers.remove(player);
         return ok;
     }
 
-    public int showConnectedPlayers(){return loggedPlayers.size();}
-    public int getMaxPlayers(){return maxPlayers;}
+    public int showConnectedPlayers() {
+        return loggedPlayers.size();
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
 
     @Override
+    public void addObserver(RemoteObserver o) throws RemoteException {
+        WrappedObserver mo = new WrappedObserver(o);
+        addObserver(mo);
+        System.out.println("Added observer:" + mo);
+    }
+
     public Map getMap() {
         return gameMap;
     }
 
+    Thread thread = new Thread() {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e) {
+                    //ignore
+                }
+            }
+            notifyObservers(new Date());
+        }
+    };
+
+    public ServerClass() {
+        thread.start();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                gameMap = new Map();
+                System.out.println("Ciao ci sono");
+            }
+        });
+
+    }
+
+
+
 
     public static void main(String[] args) throws IOException, LipeRMIException {
-
         System.out.println("Connecting...");
+
         CallHandler callHandler = new CallHandler();
         serverInterface interfaceImplementation;
         interfaceImplementation = new ServerClass();
-
-
         callHandler.registerGlobal(serverInterface.class,interfaceImplementation);
-
 
         Server server = new Server();
         int thePortIWantToBind = 4455;
-
-
-
-
-
         server.bind(thePortIWantToBind,callHandler);
         System.out.println("Binding...");
-
     }
 }
