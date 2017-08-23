@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 /**
  * Created by msnsk on 2017/05/23.
@@ -12,7 +13,7 @@ public class WaitingGUI extends JFrame{
     private Timer SimpleTimer;
 
 
-    public WaitingGUI(ClientProfile player) {
+    public WaitingGUI(ClientProfile player) throws RemoteException {
         this.player = player;
 
         setTitle("WaitingGUI");
@@ -26,7 +27,11 @@ public class WaitingGUI extends JFrame{
         SimpleTimer = new Timer(1000, new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                checkOnlineUsers();
+                try {
+                    checkOnlineUsers();
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         SimpleTimer.start();
@@ -36,7 +41,12 @@ public class WaitingGUI extends JFrame{
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                ClientClass client = new ClientClass();
+                ClientClass client = null;
+                try {
+                    client = new ClientClass();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 serverInterface remoteObject = null;
                 try {
                     remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
@@ -49,7 +59,7 @@ public class WaitingGUI extends JFrame{
         });
     }
 
-    public void checkOnlineUsers() {
+    public void checkOnlineUsers() throws RemoteException {
         ClientClass client = new ClientClass();
         serverInterface remoteObject = null;
         try {
@@ -72,7 +82,11 @@ public class WaitingGUI extends JFrame{
                     setVisible(false);
                     Runnable init = new Runnable() {
                         public void run() {
-                            new PlayingGUI(player);
+                            try {
+                                new PlayingGUI(player);
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
                         }
                     };
                     SwingUtilities.invokeLater(init);

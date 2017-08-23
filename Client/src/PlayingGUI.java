@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
@@ -39,7 +40,7 @@ public class PlayingGUI extends JFrame{
     private Map map;
 
 
-    public PlayingGUI(ClientProfile player) {
+    public PlayingGUI(ClientProfile player) throws RemoteException {
         this.player = player;
 
         setTitle("PlayingGUI");
@@ -86,7 +87,12 @@ public class PlayingGUI extends JFrame{
                     //cell.setStyle("STYLE_FILLCOLOR=#FFFFFF");
                     //graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FFFFFF",new Object[] {cell});
 
-                    ClientClass client = new ClientClass();
+                    ClientClass client = null;
+                    try {
+                        client = new ClientClass();
+                    } catch (RemoteException e1) {
+                        e1.printStackTrace();
+                    }
                     serverInterface remoteObject = null;
                     try {
                         remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);

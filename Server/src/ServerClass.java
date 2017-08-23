@@ -6,11 +6,9 @@ import lipermi.net.Server;
 import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.rmi.RemoteException;
+import java.util.*;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -25,19 +23,52 @@ public class ServerClass extends Observable implements serverInterface, Serializ
     private Map gameMap;
 
     private class WrappedObserver implements Observer, Serializable {
-
+            private static final long serialVersionUID = 1L;
+            private RemoteObserver ro = null;
+            public WrappedObserver(RemoteObserver ro){
+                this.ro = ro;
+            }
+        @Override
+        public void update(Observable o, Object arg){
+            ro.update(o.toString(),arg);
+        }
     }
 
     @Override
+    public void addObserver(RemoteObserver o) throws RemoteException{
+        WrappedObserver mo = new WrappedObserver(o);
+        addObserver(mo);
+        System.out.println("Added observer:" + mo);
+    }
+
+    Thread thread = new Thread(){
+        @Override
+        public void run(){
+            while (true) {
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e) {
+                    //ignore
+                }
+                setChanged();
+                notifyObservers(new Date());
+            }
+        };
+    };
+
     public ServerClass(){
+        thread.start();
+    }
+
+
+   /* public ServerClass(){
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gameMap = new Map();
                 System.out.println("Ciao ci sono");
             }
 
-        });
-    }
+        });*/
 
 
     @Override
@@ -82,11 +113,6 @@ public class ServerClass extends Observable implements serverInterface, Serializ
 
     public int showConnectedPlayers(){return loggedPlayers.size();}
     public int getMaxPlayers(){return maxPlayers;}
-
-    @Override
-    public void addObserver(RemoteObserver o) {
-        WrappedObserver mo = new WrappedObserver(o);
-    }
 
     @Override
     public Map getMap() {

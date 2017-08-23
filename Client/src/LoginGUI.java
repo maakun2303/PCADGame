@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 public class LoginGUI extends JFrame {
     private JPanel panel1;
@@ -24,7 +25,12 @@ public class LoginGUI extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClientClass client = new ClientClass();
+                ClientClass client = null;
+                try {
+                    client = new ClientClass();
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
                 Input = (textField1.getText());
                 if (Input.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a nickname");
@@ -47,7 +53,11 @@ public class LoginGUI extends JFrame {
 
                                     Runnable init = new Runnable() {
                                         public void run() {
-                                            new WaitingGUI(player);
+                                            try {
+                                                new WaitingGUI(player);
+                                            } catch (RemoteException e1) {
+                                                e1.printStackTrace();
+                                            }
                                         }
                                     };
                                     SwingUtilities.invokeLater(init);
