@@ -111,7 +111,11 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                    remoteObject.movePlayer(player, graphAdapter.getCellToVertexMap().get(cell).name);
+                    try {
+                        remoteObject.movePlayer(player, graphAdapter.getCellToVertexMap().get(cell).name);
+                    } catch (RemoteException e1) {
+                        e1.printStackTrace();
+                    }
 
                 }
             }

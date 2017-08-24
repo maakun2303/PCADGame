@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.security.AllPermission;
 import java.util.*;
 
@@ -44,13 +47,13 @@ public class ServerClass extends Observable implements serverInterface {
     }
 
 
-    public void movePlayer(ClientProfile player, int newPosition) {
+    public void movePlayer(ClientProfile player, int newPosition) throws RemoteException{
         gameMap.movePlayer(player, newPosition);
         setChanged();
         notifyObservers(getMap());
     }
 
-    public ClientProfile login(String username) {
+    public ClientProfile login(String username) throws RemoteException{
 
         for (ClientProfile item : loggedPlayers) {
             if (item.getNickname().equals(username)) {
@@ -80,16 +83,16 @@ public class ServerClass extends Observable implements serverInterface {
 
     }
 
-    public boolean removePlayer(ClientProfile player) {
+    public boolean removePlayer(ClientProfile player) throws RemoteException{
         boolean ok = loggedPlayers.remove(player);
         return ok;
     }
 
-    public int showConnectedPlayers() {
+    public int showConnectedPlayers() throws RemoteException {
         return loggedPlayers.size();
     }
 
-    public int getMaxPlayers() {
+    public int getMaxPlayers() throws RemoteException{
         return maxPlayers;
     }
 
@@ -100,7 +103,7 @@ public class ServerClass extends Observable implements serverInterface {
         System.out.println("Added observer:" + mo);
     }
 
-    public Map getMap() {
+    public Map getMap() throws RemoteException{
         return gameMap;
     }
 
@@ -118,6 +121,15 @@ public class ServerClass extends Observable implements serverInterface {
 
 
     public static void main(String[] args) throws IOException, LipeRMIException {
+
+       /* try {
+            Registry rmiRegistry = LocateRegistry.createRegistry(44555);
+            serverInterface rmiService = (serverInterface) UnicastRemoteObject.exportObject(new ServerClass(), 4455);
+            rmiRegistry.bind("RmiService", rmiService);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }*/
+
         System.out.println("Connecting...");
 
         CallHandler callHandler = new CallHandler();

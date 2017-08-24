@@ -44,6 +44,7 @@ public class LoginGUI extends JFrame {
                             e1.printStackTrace();
                             JOptionPane.showMessageDialog(null, "Server offline, try again later");
                         }
+                    try {
                         if(remoteObject.showConnectedPlayers() >= remoteObject.getMaxPlayers()) JOptionPane.showMessageDialog(null, "Game is full, try again later");
                         else {
                             player = remoteObject.login(LoginGUI.Input);
@@ -63,6 +64,9 @@ public class LoginGUI extends JFrame {
                                     SwingUtilities.invokeLater(init);
                             }
                         }
+                    } catch (RemoteException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         });

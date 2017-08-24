@@ -54,8 +54,12 @@ public class WaitingGUI extends JFrame{
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+                try {
                     remoteObject.removePlayer(player);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
+            }
         });
     }
 
@@ -73,23 +77,27 @@ public class WaitingGUI extends JFrame{
         Runnable target = new Runnable() {
             @Override
             public void run() {
-                if(finalRemoteObject.showConnectedPlayers() < finalRemoteObject.getMaxPlayers()){
-                    int result = finalRemoteObject.getMaxPlayers() - finalRemoteObject.showConnectedPlayers();
-                    label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
-                }
-                else {
-                    SimpleTimer.stop();
-                    setVisible(false);
-                    Runnable init = new Runnable() {
-                        public void run() {
-                            try {
-                                new PlayingGUI(player);
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
+                try {
+                    if(finalRemoteObject.showConnectedPlayers() < finalRemoteObject.getMaxPlayers()){
+                        int result = finalRemoteObject.getMaxPlayers() - finalRemoteObject.showConnectedPlayers();
+                        label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
+                    }
+                    else {
+                        SimpleTimer.stop();
+                        setVisible(false);
+                        Runnable init = new Runnable() {
+                            public void run() {
+                                try {
+                                    new PlayingGUI(player);
+                                } catch (RemoteException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    };
-                    SwingUtilities.invokeLater(init);
+                        };
+                        SwingUtilities.invokeLater(init);
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
 
             }
