@@ -29,13 +29,18 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     private JLabel label1;
     private ClientProfile player;
     private Map map;
+    private JGraphXAdapter<Node, DefaultEdge> graphAdapter;
+    private mxGraphComponent gracom;
+    private mxIGraphLayout layout;
 
 
     public PlayingGUI(ClientProfile player) throws RemoteException {
 
+        frame1 = new JFrame();
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         this.player = player;
 
-        frame1 = new JFrame();
         frame1.setTitle("PlayingGUI");
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.setSize(400, 300);
@@ -61,7 +66,9 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         }
         remoteObject.addObserver(this);
         /////
-
+        graphAdapter = new JGraphXAdapter<Node, DefaultEdge>(map.structure);
+        gracom = new mxGraphComponent(graphAdapter);
+        layout = new mxHierarchicalLayout(graphAdapter);
         showMap();
     }
 
@@ -76,20 +83,17 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         }
     }
 
-    public void move(mxGraphComponent gracom, JGraphXAdapter<Node, DefaultEdge> graphAdapter) throws RemoteException {
+    public void move() throws RemoteException {
         Set<Node> adjnodes = map.adjacentNodes(map.getNode(player));
 
         gracom.getGraphControl().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 Object cell = gracom.getCellAt(e.getX(), e.getY());
-                //mxCell cell =(mxCell) gracom.getCellAt(e.getX(), e.getY());
                 System.out.println("Mouse click in graph component");
 
                 if (cell != null && adjnodes.contains(graphAdapter.getCellToVertexMap().get(cell))) {
                     System.out.println("cell=" + graphAdapter.getLabel(cell));
-                    //cell.setStyle("STYLE_FILLCOLOR=#FFFFFF");
-                    //graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"#FFFFFF",new Object[] {cell});
 
                     ClientClass client = null;
                     try {
@@ -105,24 +109,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                         e1.printStackTrace();
                     }
                     remoteObject.movePlayer(player, graphAdapter.getCellToVertexMap().get(cell).name);
-
-                    try {
-                        remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
-
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-
-                    map = remoteObject.getMap();
-                    panel1.removeAll();
-                    try {
-                        showMap();
-                    } catch (RemoteException e1) {
-                        e1.printStackTrace();
-                    }
-
-                    panel1.revalidate();
-                    panel1.repaint();
                 }
             }
         });
@@ -162,10 +148,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
     public void showMap() throws RemoteException {
 
-        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JGraphXAdapter<Node, DefaultEdge> graphAdapter = new JGraphXAdapter<Node, DefaultEdge>(map.structure);
-
         mxRectangle rec = new mxRectangle(10.0,10.0,400.0,400.0);
         graphAdapter.setMaximumGraphBounds(rec);
         graphAdapter.setCellsSelectable(false);
@@ -191,30 +173,43 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         edgeStyle.setDefaultEdgeStyle(style);
         graphAdapter.setStylesheet(edgeStyle);
 
-        mxIGraphLayout layout = new mxHierarchicalLayout(graphAdapter);
+        //mxIGraphLayout layout = new mxHierarchicalLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
 
-        mxGraphComponent gracom = new mxGraphComponent(graphAdapter);
         gracom.setConnectable(false);
         panel1.setLayout(new BorderLayout());
         panel1.add(gracom,BorderLayout.CENTER);
 
         frame1.add(panel1);
 
-        move(gracom, graphAdapter);
+        move();
 
         frame1.pack();
         //setLocationByPlatform(true);
         frame1.setVisible(true);
     }
 
+
+
     @Override
     public void update(Object observable, Object updateMsg) throws RemoteException {
-        map = (Map) updateMsg;
-        panel1.removeAll();
-        showMap();
 
-        panel1.revalidate();
-        panel1.repaint();
-    }
+    //    Runnable init = new Runnable() {
+   //         public void run() {
+                map = (Map) updateMsg;
+                graphAdapter= new JGraphXAdapter<Node, DefaultEdge>(map.structure);
+                gracom = new mxGraphComponent(graphAdapter);
+                layout = new mxHierarchicalLayout(graphAdapter);
+                panel1.removeAll();
+                    try {
+                        this.showMap();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+            }
+       // };
+      //  SwingUtilities.invokeLater(init);
+
+
+    //}
 }

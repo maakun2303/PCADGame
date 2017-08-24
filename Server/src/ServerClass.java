@@ -100,22 +100,7 @@ public class ServerClass extends Observable implements serverInterface {
         return gameMap;
     }
 
-    Thread thread = new Thread() {
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    Thread.sleep(5 * 1000);
-                } catch (InterruptedException e) {
-                    //ignore
-                }
-            }
-            notifyObservers(new Date());
-        }
-    };
-
     public ServerClass() {
-        thread.start();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gameMap = new Map();
