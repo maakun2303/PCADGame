@@ -37,7 +37,6 @@ public class ServerClass extends Observable implements serverInterface {
         @Override
         public void update(Observable o, Object arg) {
             try {
-                System.out.println("MERDACCIA");
                 ro.update(o.toString(), arg);
             } catch (RemoteException e) {
                 System.out.println("Remote exception removing observer:"+this);
@@ -108,6 +107,7 @@ public class ServerClass extends Observable implements serverInterface {
     }
 
     public ServerClass() {
+        thread.start();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gameMap = new Map();
@@ -118,17 +118,22 @@ public class ServerClass extends Observable implements serverInterface {
     }
 
 
-
+    Thread thread = new Thread() {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+                setChanged();
+                notifyObservers(new Map());
+            }
+        };
+    };
 
     public static void main(String[] args) throws IOException, LipeRMIException {
-
-       /* try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(44555);
-            serverInterface rmiService = (serverInterface) UnicastRemoteObject.exportObject(new ServerClass(), 4455);
-            rmiRegistry.bind("RmiService", rmiService);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }*/
 
         System.out.println("Connecting...");
 
@@ -141,5 +146,13 @@ public class ServerClass extends Observable implements serverInterface {
         int thePortIWantToBind = 4455;
         server.bind(thePortIWantToBind,callHandler);
         System.out.println("Binding...");
+
+        try {
+            Registry rmiRegistry = LocateRegistry.createRegistry(4456);
+            serverInterface rmiService = (serverInterface) UnicastRemoteObject.exportObject(new ServerClass(), 4456);
+            rmiRegistry.bind("RmiService", rmiService);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

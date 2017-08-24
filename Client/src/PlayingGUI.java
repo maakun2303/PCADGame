@@ -14,6 +14,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -39,6 +42,15 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     public PlayingGUI(ClientProfile player) throws RemoteException {
         super();
 
+        try {
+            serverInterface remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+            remoteService.addObserver(this);
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         frame1 = new JFrame();
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -52,7 +64,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         ClientClass client = new ClientClass();
         serverInterface remoteObject = null;
         try {
-            remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
+            remoteObject = client.getServerInterface(client.remoteHost, 4456);
 
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -62,7 +74,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
         /////
         try {
-            remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
+            remoteObject = client.getServerInterface(client.remoteHost, 4456);
 
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -106,7 +118,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                     }
                     serverInterface remoteObject = null;
                     try {
-                        remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
+                        remoteObject = client.getServerInterface(client.remoteHost, 4456);
 
                     } catch (IOException e1) {
                         e1.printStackTrace();
@@ -199,20 +211,15 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
     @Override
     public void update(Object observable, Object updateMsg) throws RemoteException {
+        System.out.println("MERDACCIA");
 
-    //    Runnable init = new Runnable() {
-   //         public void run() {
+
                 System.out.println("this: " + this.toString());
-                this.map = (Map) updateMsg;
-                this.graphAdapter= new JGraphXAdapter<Node, DefaultEdge>(map.structure);
-                this.gracom = new mxGraphComponent(graphAdapter);
-                this.layout = new mxHierarchicalLayout(graphAdapter);
-                this.showMap();
-
-            }
-       // };
-      //  SwingUtilities.invokeLater(init);
+                map = (Map) updateMsg;
+                graphAdapter= new JGraphXAdapter<Node, DefaultEdge>(map.structure);
+                gracom = new mxGraphComponent(graphAdapter);
+                layout = new mxHierarchicalLayout(graphAdapter);
 
 
-    //}
+    }
 }
