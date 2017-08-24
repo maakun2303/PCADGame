@@ -19,6 +19,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Observable;
 import java.util.Set;
 
 /**
@@ -36,6 +37,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
 
     public PlayingGUI(ClientProfile player) throws RemoteException {
+        super();
 
         frame1 = new JFrame();
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -110,6 +112,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                         e1.printStackTrace();
                     }
                     remoteObject.movePlayer(player, graphAdapter.getCellToVertexMap().get(cell).name);
+
                 }
             }
         });
@@ -190,23 +193,18 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         frame1.setVisible(true);
     }
 
-
-
     @Override
     public void update(Object observable, Object updateMsg) throws RemoteException {
 
     //    Runnable init = new Runnable() {
    //         public void run() {
-                map = (Map) updateMsg;
-                graphAdapter= new JGraphXAdapter<Node, DefaultEdge>(map.structure);
-                gracom = new mxGraphComponent(graphAdapter);
-                layout = new mxHierarchicalLayout(graphAdapter);
-                panel1.removeAll();
-                    try {
-                        this.showMap();
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
+                System.out.println("this: " + this.toString());
+                this.map = (Map) updateMsg;
+                this.graphAdapter= new JGraphXAdapter<Node, DefaultEdge>(map.structure);
+                this.gracom = new mxGraphComponent(graphAdapter);
+                this.layout = new mxHierarchicalLayout(graphAdapter);
+                this.showMap();
+
             }
        // };
       //  SwingUtilities.invokeLater(init);

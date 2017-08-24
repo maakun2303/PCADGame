@@ -11,7 +11,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ClientClass{
 
-    static final String remoteHost = "localhost";
+    static final String remoteHost = "localhost"; //192.168.1.125
     static final int portWasBinded = 4455;
 
     protected ClientClass() throws RemoteException {

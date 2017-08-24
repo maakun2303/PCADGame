@@ -34,9 +34,11 @@ public class ServerClass extends Observable implements serverInterface {
         @Override
         public void update(Observable o, Object arg) {
             try {
+                System.out.println("MERDACCIA");
                 ro.update(o.toString(), arg);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                System.out.println("Remote exception removing observer:"+this);
+                o.deleteObserver(this);
             }
         }
     }
