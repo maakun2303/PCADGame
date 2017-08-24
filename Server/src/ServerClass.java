@@ -5,6 +5,7 @@ import lipermi.net.Server;
 import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -114,6 +115,8 @@ public class ServerClass extends Observable implements serverInterface {
 
 
     public static void main(String[] args) throws IOException, LipeRMIException {
+        if(System.getSecurityManager() == null)
+            System.setSecurityManager(new RMISecurityManager());
         System.out.println("Connecting...");
 
         CallHandler callHandler = new CallHandler();
