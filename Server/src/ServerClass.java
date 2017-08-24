@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
+import java.security.AllPermission;
 import java.util.*;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -115,8 +116,6 @@ public class ServerClass extends Observable implements serverInterface {
 
 
     public static void main(String[] args) throws IOException, LipeRMIException {
-        if(System.getSecurityManager() == null)
-            System.setSecurityManager(new RMISecurityManager());
         System.out.println("Connecting...");
 
         CallHandler callHandler = new CallHandler();

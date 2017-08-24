@@ -59,8 +59,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         map = remoteObject.getMap();
 
         /////
-        if(System.getSecurityManager() == null)
-            System.setSecurityManager(new RMISecurityManager());
         try {
             remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
 
