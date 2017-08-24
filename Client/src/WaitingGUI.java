@@ -61,7 +61,7 @@ public class WaitingGUI extends JFrame{
                 serverInterface remoteService = null;
                 try {
                     try {
-                        remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+                        remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
                     } catch (NotBoundException e) {
                         e.printStackTrace();
                     }
@@ -82,7 +82,7 @@ public class WaitingGUI extends JFrame{
         ClientClass client = new ClientClass();
         serverInterface remoteService = null;
         try {
-            remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+            remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
 
         } catch (IOException e1) {
             e1.printStackTrace();

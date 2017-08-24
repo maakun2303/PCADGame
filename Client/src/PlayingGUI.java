@@ -43,7 +43,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         super();
 
         try {
-            serverInterface remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+            serverInterface remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
             remoteService.addObserver(this);
             map = remoteService.getMap();
         } catch (NotBoundException e) {
@@ -100,7 +100,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                     serverInterface remoteService = null;
                     try {
                         try {
-                            remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+                            remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
                         } catch (NotBoundException e1) {
                             e1.printStackTrace();
                         }
@@ -196,8 +196,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     }
 
     @Override
-    public void update(Object observable, Object updateMsg) throws RemoteException {
-        System.out.println("MERDACCIA");
+    public void update(Object observable, Object updateMsg) throws RemoteException {;
 
             Runnable init = new Runnable() {
                 public void run() {

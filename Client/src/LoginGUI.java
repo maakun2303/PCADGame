@@ -41,7 +41,7 @@ public class LoginGUI extends JFrame {
                     serverInterface remoteService = null;
                         try {
                             try {
-                                remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+                                remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
                             } catch (NotBoundException e1) {
                                 e1.printStackTrace();
                             }
