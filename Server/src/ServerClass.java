@@ -107,11 +107,11 @@ public class ServerClass extends Observable implements serverInterface {
     }
 
     public ServerClass() {
-        thread.start();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gameMap = new Map();
-                System.out.println("Ciao ci sono");
+                System.out.println(gameMap.toString());
+                //thread.start();
             }
         });
 
@@ -134,7 +134,7 @@ public class ServerClass extends Observable implements serverInterface {
     };
 
     public static void main(String[] args) throws IOException, LipeRMIException {
-
+        /*
         System.out.println("Connecting...");
 
         CallHandler callHandler = new CallHandler();
@@ -145,7 +145,7 @@ public class ServerClass extends Observable implements serverInterface {
         Server server = new Server();
         int thePortIWantToBind = 4455;
         server.bind(thePortIWantToBind,callHandler);
-        System.out.println("Binding...");
+        System.out.println("Binding...");*/
 
         try {
             Registry rmiRegistry = LocateRegistry.createRegistry(4456);

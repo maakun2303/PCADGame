@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 /**
@@ -22,13 +25,21 @@ public class WaitingGUI extends JFrame{
         setSize(400,300);
         setLocationRelativeTo(null);
         setVisible(true);
-        checkOnlineUsers();
+        try {
+            checkOnlineUsers();
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
 
         SimpleTimer = new Timer(1000, new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    checkOnlineUsers();
+                    try {
+                        checkOnlineUsers();
+                    } catch (NotBoundException e1) {
+                        e1.printStackTrace();
+                    }
                 } catch (RemoteException e1) {
                     e1.printStackTrace();
                 }
@@ -47,15 +58,19 @@ public class WaitingGUI extends JFrame{
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-                serverInterface remoteObject = null;
+                serverInterface remoteService = null;
                 try {
-                    remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
+                    try {
+                        remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+                    } catch (NotBoundException e) {
+                        e.printStackTrace();
+                    }
 
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
                 try {
-                    remoteObject.removePlayer(player);
+                    remoteService.removePlayer(player);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -63,23 +78,23 @@ public class WaitingGUI extends JFrame{
         });
     }
 
-    public void checkOnlineUsers() throws RemoteException {
+    public void checkOnlineUsers() throws RemoteException, NotBoundException {
         ClientClass client = new ClientClass();
-        serverInterface remoteObject = null;
+        serverInterface remoteService = null;
         try {
-            remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
+            remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
 
         } catch (IOException e1) {
             e1.printStackTrace();
         }
 
-        serverInterface finalRemoteObject = remoteObject;
+        serverInterface finalRemoteService = remoteService;
         Runnable target = new Runnable() {
             @Override
             public void run() {
                 try {
-                    if(finalRemoteObject.showConnectedPlayers() < finalRemoteObject.getMaxPlayers()){
-                        int result = finalRemoteObject.getMaxPlayers() - finalRemoteObject.showConnectedPlayers();
+                    if(finalRemoteService.showConnectedPlayers() < finalRemoteService.getMaxPlayers()){
+                        int result = finalRemoteService.getMaxPlayers() - finalRemoteService.showConnectedPlayers();
                         label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
                     }
                     else {

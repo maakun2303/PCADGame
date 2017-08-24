@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class LoginGUI extends JFrame {
@@ -36,18 +38,22 @@ public class LoginGUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Please enter a nickname");
                 }
                 else{
-                        serverInterface remoteObject = null;
+                    serverInterface remoteService = null;
                         try {
-                            remoteObject = client.getServerInterface(client.remoteHost,client.portWasBinded );
+                            try {
+                                remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+                            } catch (NotBoundException e1) {
+                                e1.printStackTrace();
+                            }
 
                         } catch (IOException e1) {
                             e1.printStackTrace();
                             JOptionPane.showMessageDialog(null, "Server offline, try again later");
                         }
                     try {
-                        if(remoteObject.showConnectedPlayers() >= remoteObject.getMaxPlayers()) JOptionPane.showMessageDialog(null, "Game is full, try again later");
+                        if(remoteService.showConnectedPlayers() >= remoteService.getMaxPlayers()) JOptionPane.showMessageDialog(null, "Game is full, try again later");
                         else {
-                            player = remoteObject.login(LoginGUI.Input);
+                            player = remoteService.login(LoginGUI.Input);
                             if(player.getNickname().equals("")) JOptionPane.showMessageDialog(null, "Nickname already picked! Choose a different one") ;
                             else {
                                     setVisible(false);

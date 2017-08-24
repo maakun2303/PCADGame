@@ -45,6 +45,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         try {
             serverInterface remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
             remoteService.addObserver(this);
+            map = remoteService.getMap();
         } catch (NotBoundException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
@@ -56,31 +57,11 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
         this.player = player;
 
-        frame1.setTitle("PlayingGUI");
+        frame1.setTitle("PlayingGUI " + "- Player: " + player.getNickname());
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame1.setSize(400, 300);
         frame1.setLocationRelativeTo(null);
 
-        ClientClass client = new ClientClass();
-        serverInterface remoteObject = null;
-        try {
-            remoteObject = client.getServerInterface(client.remoteHost, 4456);
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
-        map = remoteObject.getMap();
-
-        /////
-        try {
-            remoteObject = client.getServerInterface(client.remoteHost, 4456);
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        remoteObject.addObserver(this);
-        /////
         graphAdapter = new JGraphXAdapter<Node, DefaultEdge>(map.structure);
         gracom = new mxGraphComponent(graphAdapter);
         layout = new mxHierarchicalLayout(graphAdapter);
@@ -116,15 +97,19 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                     } catch (RemoteException e1) {
                         e1.printStackTrace();
                     }
-                    serverInterface remoteObject = null;
+                    serverInterface remoteService = null;
                     try {
-                        remoteObject = client.getServerInterface(client.remoteHost, 4456);
+                        try {
+                            remoteService = (serverInterface) Naming.lookup("//localhost:4456/RmiService");
+                        } catch (NotBoundException e1) {
+                            e1.printStackTrace();
+                        }
 
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                     try {
-                        remoteObject.movePlayer(player, graphAdapter.getCellToVertexMap().get(cell).name);
+                        remoteService.movePlayer(player, graphAdapter.getCellToVertexMap().get(cell).name);
                     } catch (RemoteException e1) {
                         e1.printStackTrace();
                     }
@@ -167,6 +152,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     }
 
     public void showMap() throws RemoteException {
+
 
         mxRectangle rec = new mxRectangle(10.0,10.0,400.0,400.0);
         graphAdapter.setMaximumGraphBounds(rec);
@@ -213,12 +199,22 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     public void update(Object observable, Object updateMsg) throws RemoteException {
         System.out.println("MERDACCIA");
 
+            Runnable init = new Runnable() {
+                public void run() {
+        map = (Map) updateMsg;
+        graphAdapter= new JGraphXAdapter<Node, DefaultEdge> (map.structure);
+        gracom = new mxGraphComponent(graphAdapter);
+        layout = new mxHierarchicalLayout(graphAdapter);
+        panel1.removeAll();
+        try {
+            showMap();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+     };
+      SwingUtilities.invokeLater(init);
 
-                System.out.println("this: " + this.toString());
-                map = (Map) updateMsg;
-                graphAdapter= new JGraphXAdapter<Node, DefaultEdge>(map.structure);
-                gracom = new mxGraphComponent(graphAdapter);
-                layout = new mxHierarchicalLayout(graphAdapter);
 
 
     }
