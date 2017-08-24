@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
@@ -58,6 +59,8 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         map = remoteObject.getMap();
 
         /////
+        if(System.getSecurityManager() == null)
+            System.setSecurityManager(new RMISecurityManager());
         try {
             remoteObject = client.getServerInterface(client.remoteHost, client.portWasBinded);
 
