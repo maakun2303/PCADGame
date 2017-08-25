@@ -16,6 +16,8 @@ public interface serverInterface extends Remote{
     int getMaxPlayers() throws RemoteException;
 
     void addObserver(RemoteObserver o) throws RemoteException;
+    void deleteObserver(RemoteObserver o) throws RemoteException;
+
     Map getMap() throws RemoteException;
     void movePlayer(ClientProfile player, int newPosition) throws RemoteException;
 }

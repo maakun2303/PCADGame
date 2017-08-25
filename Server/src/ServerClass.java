@@ -78,6 +78,8 @@ public class ServerClass extends Observable implements serverInterface {
         }
 
         gameMap.addPlayer(player);
+        setChanged();
+        notifyObservers();
         return player;
 
     }
@@ -100,6 +102,12 @@ public class ServerClass extends Observable implements serverInterface {
         WrappedObserver mo = new WrappedObserver(o);
         addObserver(mo);
         System.out.println("Added observer:" + mo);
+    }
+
+    @Override
+    public void deleteObserver(RemoteObserver o) throws RemoteException {
+        WrappedObserver mo = new WrappedObserver(o);
+        deleteObserver(mo);
     }
 
     public Map getMap() throws RemoteException{
