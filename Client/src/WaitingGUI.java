@@ -114,7 +114,6 @@ public class WaitingGUI extends UnicastRemoteObject implements RemoteObserver {
 
     @Override
     public void update(Object observable, Object updateMsg) throws RemoteException {
-
         if(!frame1.isVisible())
         {
             serverInterface remoteService = null;
@@ -125,14 +124,14 @@ public class WaitingGUI extends UnicastRemoteObject implements RemoteObserver {
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-            remoteService.deleteObserver(this);
-            return;
+            remoteService.deleteObserver(WaitingGUI.this);
         }
-
-        try {
-            checkOnlineUsers();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
+        else {
+            try {
+                checkOnlineUsers();
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

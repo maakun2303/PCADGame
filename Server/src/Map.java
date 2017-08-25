@@ -75,6 +75,22 @@ public class Map implements Serializable{
         adjacentNodes(aux);
     }
 
+    public void addRinnegato(ClientProfile player){
+        Node aux = getNode(7);
+        HashSet<ClientProfile> set = aux.getUsers();
+        if(set == null) set = new HashSet<ClientProfile>();
+        set.add(player);
+        aux.setUsers(set);
+    }
+
+    public void moveRinnegato(ClientProfile rinnegato){
+            Random rand = new Random();
+
+            int  n = rand.nextInt(this.structure.vertexSet().size()-1) + 0;
+            System.out.println(n);
+            movePlayer(rinnegato,n);
+    }
+
     public Map getMap() {
         return this;
     }

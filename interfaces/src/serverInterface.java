@@ -19,5 +19,6 @@ public interface serverInterface extends Remote{
     void deleteObserver(RemoteObserver o) throws RemoteException;
 
     Map getMap() throws RemoteException;
+    ClientProfile getTurn() throws RemoteException;
     void movePlayer(ClientProfile player, int newPosition) throws RemoteException;
 }

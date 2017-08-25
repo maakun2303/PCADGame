@@ -25,6 +25,13 @@ public class ServerClass extends Observable implements serverInterface {
     boolean b = false; //for team choice
     private int maxPlayers = 2;
     private Map gameMap;
+    private static int moveNumber = 0;
+    private ClientProfile turn;
+    private ClientProfile rinnegato;
+
+    public ClientProfile getTurn() {
+        return turn;
+    }
 
     private class WrappedObserver implements Observer, Serializable {
         private static final long serialVersionUID = 1L;
@@ -48,8 +55,13 @@ public class ServerClass extends Observable implements serverInterface {
 
     public void movePlayer(ClientProfile player, int newPosition) throws RemoteException{
         gameMap.movePlayer(player, newPosition);
+
+        moveNumber++;
+        turn = loggedPlayers.get(moveNumber%loggedPlayers.size());
+        if(moveNumber%loggedPlayers.size() == 0) gameMap.moveRinnegato(rinnegato);
         setChanged();
         notifyObservers(getMap());
+        System.out.println(gameMap.toString());
     }
 
     public ClientProfile login(String username) throws RemoteException{
@@ -68,6 +80,7 @@ public class ServerClass extends Observable implements serverInterface {
 
 
         player.setTeam(b);
+        if(loggedPlayers.isEmpty()) turn = player;
         loggedPlayers.add(player);
 
         System.out.println("Total players: " + loggedPlayers.size());
@@ -81,7 +94,6 @@ public class ServerClass extends Observable implements serverInterface {
         setChanged();
         notifyObservers();
         return player;
-
     }
 
     public boolean removePlayer(ClientProfile player) throws RemoteException{
@@ -108,6 +120,7 @@ public class ServerClass extends Observable implements serverInterface {
     public void deleteObserver(RemoteObserver o) throws RemoteException {
         WrappedObserver mo = new WrappedObserver(o);
         deleteObserver(mo);
+        System.out.println("Delete observer:" + mo);
     }
 
     public Map getMap() throws RemoteException{
@@ -117,7 +130,10 @@ public class ServerClass extends Observable implements serverInterface {
     public ServerClass() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                rinnegato = new ClientProfile("DelziKiller");
+                rinnegato.setTeam(ClientProfile.EnumColor.blue);
                 gameMap = new Map();
+                gameMap.addRinnegato(rinnegato);
                 System.out.println(gameMap.toString());
                 //thread.start();
             }

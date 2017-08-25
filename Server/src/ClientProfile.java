@@ -16,6 +16,10 @@ public class ClientProfile implements Serializable{
             this.team = EnumColor.red;
     }
 
+    public void setTeam(EnumColor color){
+        this.team = color;
+    }
+
     public String getNickname() {
         return this.nickname;
     }
@@ -24,8 +28,9 @@ public class ClientProfile implements Serializable{
         return this.team;
     }
 
+
     enum EnumColor {
-        red, white
+        red, white, blue;
     }
 
     ClientProfile() {

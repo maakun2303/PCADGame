@@ -68,7 +68,18 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         showMap();
     }
 
-    public void setAdjacentNodesColor(JGraphXAdapter<Node, DefaultEdge> graphAdapter){
+    public void setAdjacentNodesColor(JGraphXAdapter<Node, DefaultEdge> graphAdapter) throws RemoteException {
+
+        try {
+            serverInterface remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
+            ClientProfile turn = remoteService.getTurn();
+            if(!turn.equals(player)) return;
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         Set<Node> nodes = map.adjacentNodes(map.getNode(player));
         Iterator<Node> iter = nodes.iterator();
         while(iter.hasNext()){
@@ -80,6 +91,16 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     }
 
     public void move() throws RemoteException {
+        try {
+            serverInterface remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
+            ClientProfile turn = remoteService.getTurn();
+            if(!turn.equals(player)) return;
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         Set<Node> adjnodes = map.adjacentNodes(map.getNode(player));
 
         gracom.getGraphControl().addMouseListener(new MouseAdapter() {
@@ -198,23 +219,20 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     @Override
     public void update(Object observable, Object updateMsg) throws RemoteException {;
 
-            Runnable init = new Runnable() {
-                public void run() {
-        map = (Map) updateMsg;
-        graphAdapter= new JGraphXAdapter<Node, DefaultEdge> (map.structure);
-        gracom = new mxGraphComponent(graphAdapter);
-        layout = new mxHierarchicalLayout(graphAdapter);
-        panel1.removeAll();
-        try {
-            showMap();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        Runnable init = new Runnable() {
+            public void run() {
+                map = (Map) updateMsg;
+                graphAdapter= new JGraphXAdapter<Node, DefaultEdge> (map.structure);
+                gracom = new mxGraphComponent(graphAdapter);
+                layout = new mxHierarchicalLayout(graphAdapter);
+                panel1.removeAll();
+                try {
+                    showMap();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
     }
      };
       SwingUtilities.invokeLater(init);
-
-
-
     }
 }
