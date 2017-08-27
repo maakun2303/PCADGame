@@ -4,6 +4,7 @@ public class ClientProfile implements Serializable{
 
     private String nickname;
     private EnumColor team;
+    private int ammo;
 
     public void setNickname(String n) {
         this.nickname = n;
@@ -28,12 +29,8 @@ public class ClientProfile implements Serializable{
         return this.team;
     }
 
-
-    enum EnumColor {
-        red, white, blue;
-    }
-
     ClientProfile() {
+        this.ammo = 5;
     }
 
     @Override
@@ -60,7 +57,17 @@ public class ClientProfile implements Serializable{
 
     ClientProfile(String s) {
         this.nickname = s;
+        this.ammo = 5;
+    }
+
+    public int getAmmo() {
+        return ammo;
     }
 }
+
+enum EnumColor {
+    red, white, blue;
+}
+
 
 

@@ -30,7 +30,9 @@ import java.util.Set;
  */
 public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     private JFrame frame1;
+    private JPanel mainPanel;
     private JPanel panel1;
+    private JPanel panel2;
     private JLabel label1;
     private ClientProfile player;
     private Map map;
@@ -53,6 +55,10 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         }
 
         frame1 = new JFrame();
+        panel1 = new JPanel();
+        panel2 = new JPanel();
+        mainPanel = new JPanel();
+        label1 = new JLabel();
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.player = player;
@@ -154,13 +160,13 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                 Iterator<ClientProfile> iterProf = n.getUsers().iterator();
                 while (iterProf.hasNext()) {
                     ClientProfile cp = iterProf.next();
-                    if (cp.getTeam() == ClientProfile.EnumColor.white) {
+                    if (cp.getTeam() == EnumColor.white) {
                         //cell = graphAdapter.getVertexToCellMap().get(n);
                         if(someoneRed == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", new Object[]{cell});
                         else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
                         someoneWhite = true;
                     }
-                    if (cp.getTeam() == ClientProfile.EnumColor.red) {
+                    if (cp.getTeam() == EnumColor.red) {
                         //cell = graphAdapter.getVertexToCellMap().get(n);
                         if(someoneWhite == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FF0000", new Object[]{cell});
                         else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
@@ -204,10 +210,18 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         layout.execute(graphAdapter.getDefaultParent());
 
         gracom.setConnectable(false);
-        panel1.setLayout(new BorderLayout());
-        panel1.add(gracom,BorderLayout.CENTER);
+        panel1.setLayout(new FlowLayout());
+        label1.setText("<html><left>Timer: " + "10:00" + "<br>Ammo: " + player.getAmmo() + "</left></html>");
 
-        frame1.add(panel1);
+        panel1.add(gracom,BorderLayout.CENTER);
+        //panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
+        panel2.add(label1);
+
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+
+        mainPanel.add(panel1);
+        mainPanel.add(panel2);
+        frame1.add(mainPanel);
 
         move();
 
@@ -226,6 +240,8 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                 gracom = new mxGraphComponent(graphAdapter);
                 layout = new mxHierarchicalLayout(graphAdapter);
                 panel1.removeAll();
+                panel2.removeAll();
+                mainPanel.removeAll();
                 try {
                     showMap();
                 } catch (RemoteException e) {
@@ -235,4 +251,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
      };
       SwingUtilities.invokeLater(init);
     }
+
+
 }

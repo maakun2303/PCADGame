@@ -64,7 +64,7 @@ public class Map implements Serializable{
 
     public void addPlayer(ClientProfile player){
         Node aux = null;
-        if(player.getTeam()== ClientProfile.EnumColor.white) aux = getNode(0);
+        if(player.getTeam()== EnumColor.white) aux = getNode(0);
         else aux = getNode(15);
 
         HashSet<ClientProfile> set = aux.getUsers();

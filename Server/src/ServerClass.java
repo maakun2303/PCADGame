@@ -29,6 +29,16 @@ public class ServerClass extends Observable implements serverInterface {
     private ClientProfile turn;
     private ClientProfile rinnegato;
 
+    public int GetTeamAmmo(EnumColor team){
+        int result = 0;
+        Iterator<ClientProfile> it = loggedPlayers.iterator();
+        while(it.hasNext()) {
+            ClientProfile aux = it.next();
+            if(aux.getTeam() == team) result = result+aux.getAmmo();
+        }
+        return result;
+    }
+
     public ClientProfile getTurn() {
         return turn;
     }
@@ -131,7 +141,7 @@ public class ServerClass extends Observable implements serverInterface {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 rinnegato = new ClientProfile("DelziKiller");
-                rinnegato.setTeam(ClientProfile.EnumColor.blue);
+                rinnegato.setTeam(EnumColor.blue);
                 gameMap = new Map();
                 gameMap.addRinnegato(rinnegato);
                 System.out.println(gameMap.toString());
