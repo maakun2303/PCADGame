@@ -23,4 +23,5 @@ public interface serverInterface extends Remote{
     void movePlayer(String username, int newPosition) throws RemoteException;
     int getPlayerAmmo(String username) throws RemoteException;
     GameTimer getGameTimer() throws RemoteException;
+    void resetGame() throws RemoteException;
 }

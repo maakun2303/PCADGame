@@ -29,6 +29,14 @@ public class ServerClass extends Observable implements serverInterface {
     private ClientProfile turn;
     private ClientProfile rinnegato;
     private GameTimer gameTimer;
+    static int count = 0;
+
+    public void resetGame(){
+        if(count == 0){
+        loggedPlayers = new CopyOnWriteArrayList<>();
+        gameMap = new Map();}
+        count++;
+    }
 
     public int GetTeamAmmo(EnumColor team){
         int result = 0;
@@ -203,7 +211,6 @@ public class ServerClass extends Observable implements serverInterface {
         int thePortIWantToBind = 4455;
         server.bind(thePortIWantToBind,callHandler);
         System.out.println("Binding...");*/
-
         try {
             Registry rmiRegistry = LocateRegistry.createRegistry(4456);
             serverInterface rmiService = (serverInterface) UnicastRemoteObject.exportObject(new ServerClass(), 4456);

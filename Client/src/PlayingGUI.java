@@ -12,10 +12,7 @@ import sun.awt.WindowClosingListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -75,7 +72,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         mainPanel = new JPanel();
         label1 = new JLabel();
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         this.player = player;
 
         frame1.setTitle("PlayingGUI " + "- Player: " + player.getNickname());
@@ -121,7 +117,23 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                     timer.stop();
                     JOptionPane.showMessageDialog(frame1,"Partita Terminata");
                     frame1.setVisible(false);
-                    return;
+                    serverInterface remoteService = null;
+                    try {
+                        remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
+                    } catch (NotBoundException e) {
+                        e.printStackTrace();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        remoteService.resetGame();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                                new LoginGUI();
+                    //frame1.dispatchEvent(new WindowEvent(frame1,WindowEvent.WINDOW_CLOSING));
                 }
             }
         };

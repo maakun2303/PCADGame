@@ -25,7 +25,8 @@ public class Node implements Serializable {
         for(ClientProfile cp : users) {
             aux = aux + cp.getNickname() + "\n";
         }
-        return aux;
+        String aux2 = String.valueOf(this.getAmmo());
+        return aux2;
    }
 
    public HashSet<ClientProfile> getUsers(){
