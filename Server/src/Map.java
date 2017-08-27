@@ -9,6 +9,7 @@ import org.jgrapht.generate.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.VertexFactory;
 
+import javax.swing.event.SwingPropertyChangeSupport;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -48,7 +49,7 @@ public class Map implements Serializable{
     public Map() {
         structure = new SimpleGraph<Node, DefaultEdge>(DefaultEdge.class);
         HyperCubeGraphGenerator<Node, DefaultEdge> connectedGenerator =
-                new HyperCubeGraphGenerator<>(4);
+                new HyperCubeGraphGenerator<>(5);
 
         connectedGenerator.generateGraph(structure, vFactory, null);
 
@@ -95,12 +96,14 @@ public class Map implements Serializable{
         return this;
     }
 
-    public void movePlayer(ClientProfile player, int newPosition) {
+    public synchronized void movePlayer(ClientProfile player, int newPosition) {
 //        System.out.println("Player stava in "+getNode(player).name +" e vuole andare in: "+newPosition.name);
         if(getNode(player) != null) {
             System.out.println("cesta!");
             getNode(player).removeUser(player);
-            getNode(newPosition).addUser(player); //ok
+            System.out.println("Ammo in node: "+ getNode(newPosition).getAmmo());
+            getNode(newPosition).addUser(player);
+            System.out.println("Ammo in tasca:" + player.getAmmo());
             //cambi stato di un oggetto del server
         }
         else { System.out.println("uncesta!"); }

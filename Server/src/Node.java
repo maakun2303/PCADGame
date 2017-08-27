@@ -10,9 +10,13 @@ public class Node implements Serializable {
 
     Node() {
         name = id++;
-        Random rand = new Random();
-        ammo = rand.nextInt(10);
-        users = new HashSet<ClientProfile>();
+        if(name == 0 || name == 15) ammo = 0;
+        else
+        {
+            Random rand = new Random();
+            ammo = rand.nextInt(10);
+        }
+        users = new HashSet<>();
     }
 
    @Override
@@ -28,8 +32,14 @@ public class Node implements Serializable {
         return users;
    }
 
+   public int getAmmo(){
+       return ammo;
+   }
+
    public void addUser(ClientProfile player){
+       player.takeAmmo(this.getAmmo());
        users.add(player);
+       this.ammo = 0;
    }
 
     public void removeUser(ClientProfile player){ System.out.println(users.toString()); users.remove(player); System.out.println(users.toString());}

@@ -20,5 +20,7 @@ public interface serverInterface extends Remote{
 
     Map getMap() throws RemoteException;
     ClientProfile getTurn() throws RemoteException;
-    void movePlayer(ClientProfile player, int newPosition) throws RemoteException;
+    void movePlayer(String username, int newPosition) throws RemoteException;
+    int getPlayerAmmo(String username) throws RemoteException;
+    GameTimer getGameTimer() throws RemoteException;
 }

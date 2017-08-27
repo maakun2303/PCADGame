@@ -8,9 +8,12 @@ import lipermi.handler.CallHandler;
 import lipermi.net.Client;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
+import sun.awt.WindowClosingListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -39,13 +42,25 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     private JGraphXAdapter<Node, DefaultEdge> graphAdapter;
     private mxGraphComponent gracom;
     private mxIGraphLayout layout;
+    private Timer timer;
+    private GameTimer gameTimer;
 
 
     public PlayingGUI(ClientProfile player) throws RemoteException {
         super();
+        player.setAmmo(5);
+
+        timer = new Timer(1000,new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                updateTimer();
+            }
+        });
+        timer.start();
 
         try {
             serverInterface remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
+            gameTimer = remoteService.getGameTimer();
             remoteService.addObserver(this);
             map = remoteService.getMap();
         } catch (NotBoundException e) {
@@ -96,6 +111,23 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         }
     }
 
+    public void updateTimer() {
+        Runnable target = new Runnable() {
+            @Override
+            public void run() {
+                gameTimer.decTimer();
+                label1.setText("<html><left>Timer: " + gameTimer.toString() + "<br>Ammo: " + player.getAmmo() + "</left></html>");
+                if(!gameTimer.isRunning()) {
+                    timer.stop();
+                    JOptionPane.showMessageDialog(frame1,"Partita Terminata");
+                    frame1.setVisible(false);
+                    return;
+                }
+            }
+        };
+        SwingUtilities.invokeLater(target);
+    }
+
     public void move() throws RemoteException {
         try {
             serverInterface remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
@@ -136,7 +168,8 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                         e1.printStackTrace();
                     }
                     try {
-                        remoteService.movePlayer(player, graphAdapter.getCellToVertexMap().get(cell).name);
+                        remoteService.movePlayer(player.getNickname(), graphAdapter.getCellToVertexMap().get(cell).name);
+                        player.setAmmo(remoteService.getPlayerAmmo(player.getNickname()));
                     } catch (RemoteException e1) {
                         e1.printStackTrace();
                     }
@@ -180,7 +213,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
     public void showMap() throws RemoteException {
 
-
         mxRectangle rec = new mxRectangle(10.0,10.0,400.0,400.0);
         graphAdapter.setMaximumGraphBounds(rec);
         graphAdapter.setCellsSelectable(false);
@@ -211,7 +243,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
         gracom.setConnectable(false);
         panel1.setLayout(new FlowLayout());
-        label1.setText("<html><left>Timer: " + "10:00" + "<br>Ammo: " + player.getAmmo() + "</left></html>");
+        label1.setText("<html><left>Timer: " + gameTimer.toString() + "<br>Ammo: " + player.getAmmo() + "</left></html>");
 
         panel1.add(gracom,BorderLayout.CENTER);
         //panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
@@ -231,7 +263,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     }
 
     @Override
-    public void update(Object observable, Object updateMsg) throws RemoteException {;
+    public void update(Object observable, Object updateMsg) throws RemoteException {
 
         Runnable init = new Runnable() {
             public void run() {

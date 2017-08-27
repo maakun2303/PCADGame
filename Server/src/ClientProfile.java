@@ -1,3 +1,4 @@
+import javax.swing.event.SwingPropertyChangeSupport;
 import java.io.Serializable;
 
 public class ClientProfile implements Serializable{
@@ -62,6 +63,16 @@ public class ClientProfile implements Serializable{
 
     public int getAmmo() {
         return ammo;
+    }
+
+    public void setAmmo(int ammo){
+        this.ammo = ammo;
+    }
+
+    public void takeAmmo(int newAmmo){
+            System.out.println("Ammo prima: " + ammo);
+            ammo = ammo + newAmmo;
+            System.out.println("Ammo dopo: " + ammo);
     }
 }
 

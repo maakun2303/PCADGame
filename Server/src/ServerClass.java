@@ -28,6 +28,7 @@ public class ServerClass extends Observable implements serverInterface {
     private static int moveNumber = 0;
     private ClientProfile turn;
     private ClientProfile rinnegato;
+    private GameTimer gameTimer;
 
     public int GetTeamAmmo(EnumColor team){
         int result = 0;
@@ -62,8 +63,14 @@ public class ServerClass extends Observable implements serverInterface {
         }
     }
 
+    public void movePlayer(String username, int newPosition) throws RemoteException{
+        ClientProfile player = new ClientProfile();
+        for (ClientProfile item : loggedPlayers) {
+            if (item.getNickname().equals(username)) {
+                player = item;
+            }
+        }
 
-    public void movePlayer(ClientProfile player, int newPosition) throws RemoteException{
         gameMap.movePlayer(player, newPosition);
 
         moveNumber++;
@@ -72,6 +79,17 @@ public class ServerClass extends Observable implements serverInterface {
         setChanged();
         notifyObservers(getMap());
         System.out.println(gameMap.toString());
+    }
+
+    public int getPlayerAmmo(String username) throws RemoteException{
+        ClientProfile player = new ClientProfile();
+        for (ClientProfile item : loggedPlayers) {
+            if (item.getNickname().equals(username)) {
+                player = item;
+            }
+        }
+
+        return player.getAmmo();
     }
 
     public ClientProfile login(String username) throws RemoteException{
@@ -137,9 +155,14 @@ public class ServerClass extends Observable implements serverInterface {
         return gameMap;
     }
 
+    public GameTimer getGameTimer() throws RemoteException{
+        return gameTimer;
+    }
+
     public ServerClass() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                gameTimer = new GameTimer();
                 rinnegato = new ClientProfile("DelziKiller");
                 rinnegato.setTeam(EnumColor.blue);
                 gameMap = new Map();
