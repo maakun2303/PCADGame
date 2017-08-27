@@ -61,6 +61,12 @@ public class ClientProfile implements Serializable{
         this.ammo = 5;
     }
 
+    ClientProfile(String s,EnumColor team) {
+        this.nickname = s;
+        this.team = team;
+        this.ammo = 5;
+    }
+
     public int getAmmo() {
         return ammo;
     }

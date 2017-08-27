@@ -1,13 +1,10 @@
 import javax.swing.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by msnsk on 2017/05/23.

@@ -10,7 +10,7 @@ public class Node implements Serializable {
 
     Node() {
         name = id++;
-        if(name == 0 || name == 15) ammo = 0;
+        if(name == 0 || name == Constants.mapSize-1) ammo = 0;
         else
         {
             Random rand = new Random();
@@ -25,8 +25,7 @@ public class Node implements Serializable {
         for(ClientProfile cp : users) {
             aux = aux + cp.getNickname() + "\n";
         }
-        String aux2 = String.valueOf(this.getAmmo());
-        return aux2;
+        return aux;
    }
 
    public HashSet<ClientProfile> getUsers(){
@@ -67,5 +66,8 @@ public class Node implements Serializable {
         result = 31 * result + ammo;
         //result = result + users.hashCode();
         return result;
+    }
+    public static void resetID(){
+       id = 0;
     }
 }

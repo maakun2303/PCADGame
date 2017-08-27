@@ -49,7 +49,7 @@ public class Map implements Serializable{
     public Map() {
         structure = new SimpleGraph<Node, DefaultEdge>(DefaultEdge.class);
         HyperCubeGraphGenerator<Node, DefaultEdge> connectedGenerator =
-                new HyperCubeGraphGenerator<>(5);
+                new HyperCubeGraphGenerator<>(Constants.hypercubeSeed);
 
         connectedGenerator.generateGraph(structure, vFactory, null);
 
@@ -66,7 +66,7 @@ public class Map implements Serializable{
     public void addPlayer(ClientProfile player){
         Node aux = null;
         if(player.getTeam()== EnumColor.white) aux = getNode(0);
-        else aux = getNode(15);
+        else aux = getNode(Constants.mapSize-1);
 
         HashSet<ClientProfile> set = aux.getUsers();
         if(set == null) set = new HashSet<ClientProfile>();

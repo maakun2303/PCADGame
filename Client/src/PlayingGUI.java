@@ -4,11 +4,8 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.view.mxStylesheet;
-import lipermi.handler.CallHandler;
-import lipermi.net.Client;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
-import sun.awt.WindowClosingListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,12 +14,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Observable;
 import java.util.Set;
 
 /**

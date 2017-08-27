@@ -29,12 +29,20 @@ public class ServerClass extends Observable implements serverInterface {
     private ClientProfile turn;
     private ClientProfile rinnegato;
     private GameTimer gameTimer;
-    static int count = 0;
+    static int count = 1;
 
     public void resetGame(){
-        if(count == 0){
+        deleteObservers();
+        if(count == maxPlayers){
+            Node.resetID();
+            rinnegato = new ClientProfile("Mazzarello",EnumColor.blue);
+            turn = new ClientProfile();
+            moveNumber = 0;
         loggedPlayers = new CopyOnWriteArrayList<>();
-        gameMap = new Map();}
+        gameTimer = new GameTimer();
+        gameMap = new Map();
+        gameMap.addRinnegato(rinnegato);
+        count = 1;}
         count++;
     }
 
