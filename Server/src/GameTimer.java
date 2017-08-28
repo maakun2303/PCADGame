@@ -5,8 +5,8 @@ public class GameTimer implements Serializable {
     int seconds;
 
     public GameTimer(){
-        minutes = 1;
-        seconds = 0;
+        minutes = Constants.matchMin;
+        seconds = Constants.matchSec;
     }
 
     public void decTimer(){

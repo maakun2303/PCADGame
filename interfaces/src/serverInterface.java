@@ -24,4 +24,6 @@ public interface serverInterface extends Remote{
     int getPlayerAmmo(String username) throws RemoteException;
     GameTimer getGameTimer() throws RemoteException;
     void resetGame() throws RemoteException;
+    int getTeamAmmo(EnumColor team) throws RemoteException;
+    int getEnemyTeamAmmo(EnumColor team) throws RemoteException;
 }

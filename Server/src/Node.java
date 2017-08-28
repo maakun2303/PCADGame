@@ -32,6 +32,11 @@ public class Node implements Serializable {
         return users;
    }
 
+   public ClientProfile getUserIfOne() {
+       if(this.users != null && this.users.size() == 1) return this.users.iterator().next();
+       else return null;
+   }
+
    public int getAmmo(){
        return ammo;
    }
@@ -41,6 +46,14 @@ public class Node implements Serializable {
        users.add(player);
        this.ammo = 0;
    }
+
+   public boolean isColliding(){
+       return (users != null && users.size() > 1)? true : false;
+   }
+
+    public boolean isEmpty(){
+        return (users == null || users.size() == 0)? true : false;
+    }
 
     public void removeUser(ClientProfile player){ System.out.println(users.toString()); users.remove(player); System.out.println(users.toString());}
 

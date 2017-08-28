@@ -46,12 +46,41 @@ public class ServerClass extends Observable implements serverInterface {
         count++;
     }
 
-    public int GetTeamAmmo(EnumColor team){
+    public int getTeamAmmo(EnumColor team) throws RemoteException{
         int result = 0;
         Iterator<ClientProfile> it = loggedPlayers.iterator();
         while(it.hasNext()) {
             ClientProfile aux = it.next();
             if(aux.getTeam() == team) result = result+aux.getAmmo();
+        }
+        return result;
+    }
+
+    public int getEnemyTeamAmmo(EnumColor team) throws RemoteException{
+        return (team == EnumColor.white)? getTeamAmmo(EnumColor.red) : getTeamAmmo(EnumColor.white);
+    }
+
+    private int dice(){
+        Random rand = new Random();
+        return rand.nextInt(6);
+    }
+
+    public MatchResult fight(ClientProfile player1, ClientProfile player2){
+        MatchResult result = new MatchResult();
+        Random rand = new Random();
+        int d1 = rand.nextInt(6);
+        int d2 = rand.nextInt(6);
+        if(d1>d2) {
+            result.setWinner(player1);
+            result.setLoser(player2);
+            result.setWinDice(d1);
+            result.setLoseDice(d2);
+        }
+        else{
+            result.setWinner(player2);
+            result.setLoser(player1);
+            result.setWinDice(d2);
+            result.setLoseDice(d1);
         }
         return result;
     }
@@ -86,14 +115,12 @@ public class ServerClass extends Observable implements serverInterface {
                 player = item;
             }
         }
-
         gameMap.movePlayer(player, newPosition);
-
         moveNumber++;
         turn = loggedPlayers.get(moveNumber%loggedPlayers.size());
         if(moveNumber%loggedPlayers.size() == 0) gameMap.moveRinnegato(rinnegato);
         setChanged();
-        notifyObservers(getMap());
+        notifyObservers(gameMap);
         System.out.println(gameMap.toString());
     }
 

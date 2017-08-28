@@ -43,6 +43,12 @@ public class Map implements Serializable{
 
     public Set<Node> adjacentNodes(Node node) {
         NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(structure);
+        /*Set <Node> adjSet = ngbr.neighborsOf(node);
+        Iterator adjIt = adjSet.iterator();
+        while(adjIt.hasNext()){
+            Node aux = (Node) adjIt.next();
+            if(aux.isColliding()) adjSet.remove(aux);
+        }*/
         return ngbr.neighborsOf(node);
     }
 

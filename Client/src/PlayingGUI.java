@@ -110,11 +110,11 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                 label1.setText("<html><left>Timer: " + gameTimer.toString() + "<br>Ammo: " + player.getAmmo() + "</left></html>");
                 if(!gameTimer.isRunning()) {
                     timer.stop();
-                    JOptionPane.showMessageDialog(frame1,"Partita Terminata");
-                    frame1.setVisible(false);
                     serverInterface remoteService = null;
                     try {
                         remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
+                        JOptionPane.showMessageDialog(frame1,"<html><center>Partita Terminata!<br>"+ "Team "+player.getTeam().toString()+": " + remoteService.getTeamAmmo(player.getTeam()) +"<br> Team avversario: "+remoteService.getEnemyTeamAmmo(player.getTeam()) + "</center></html>");
+                        frame1.setVisible(false);
                     } catch (NotBoundException e) {
                         e.printStackTrace();
                     } catch (MalformedURLException e) {
@@ -286,10 +286,8 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+            }
+        };
+        SwingUtilities.invokeLater(init);
     }
-     };
-      SwingUtilities.invokeLater(init);
-    }
-
-
 }
