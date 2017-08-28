@@ -38,7 +38,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
     private GameTimer gameTimer;
 
 
-    public PlayingGUI(ClientProfile player) throws RemoteException {
+    public PlayingGUI(ClientProfile player) throws RemoteException, MalformedURLException, NotBoundException {
         super();
         player.setAmmo(5);
 
@@ -107,10 +107,24 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
             @Override
             public void run() {
                 gameTimer.decTimer();
-                label1.setText("<html><left>Timer: " + gameTimer.toString() + "<br>Ammo: " + player.getAmmo() + "</left></html>");
+                serverInterface remoteService = null;
+                try {
+                    remoteService = (serverInterface) Naming.lookup("//" + Constants.remoteHost + ":" + Constants.portWasBinded + "/RmiService");
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    label1.setText("<html><left>Timer: " + gameTimer.toString() + "<br>Ammo: " + remoteService.getPlayerAmmo(player.getNickname()) + "</left></html>");
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 if(!gameTimer.isRunning()) {
                     timer.stop();
-                    serverInterface remoteService = null;
+                    remoteService = null;
                     try {
                         remoteService = (serverInterface) Naming.lookup("//"+Constants.remoteHost+":"+Constants.portWasBinded+"/RmiService");
                         JOptionPane.showMessageDialog(frame1,"<html><center>Partita Terminata!<br>"+ "Team "+player.getTeam().toString()+": " + remoteService.getTeamAmmo(player.getTeam()) +"<br> Team avversario: "+remoteService.getEnemyTeamAmmo(player.getTeam()) + "</center></html>");
@@ -218,7 +232,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         setAdjacentNodesColor(graphAdapter);
     }
 
-    public void showMap() throws RemoteException {
+    public void showMap() throws RemoteException, MalformedURLException, NotBoundException {
 
         mxRectangle rec = new mxRectangle(10.0,10.0,400.0,400.0);
         graphAdapter.setMaximumGraphBounds(rec);
@@ -250,7 +264,8 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
         gracom.setConnectable(false);
         panel1.setLayout(new FlowLayout());
-        label1.setText("<html><left>Timer: " + gameTimer.toString() + "<br>Ammo: " + player.getAmmo() + "</left></html>");
+        serverInterface remoteService = (serverInterface) Naming.lookup("//" + Constants.remoteHost + ":" + Constants.portWasBinded + "/RmiService");
+        label1.setText("<html><left>Timer: " + gameTimer.toString() + "<br>Ammo: " + remoteService.getPlayerAmmo(player.getNickname()) + "</left></html>");
 
         panel1.add(gracom,BorderLayout.CENTER);
         //panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
@@ -282,7 +297,27 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                 panel2.removeAll();
                 mainPanel.removeAll();
                 try {
-                    showMap();
+                    try {
+                        showMap();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (NotBoundException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        serverInterface remoteService = (serverInterface) Naming.lookup("//" + Constants.remoteHost + ":" + Constants.portWasBinded + "/RmiService");
+                        MatchResult res = remoteService.getLastMatchInfo();
+                        if(res != null){
+                            if(res.getWinner().equals(player.getNickname())) JOptionPane.showMessageDialog(frame1,"<html><left>Hai incrociato " + res.getLoser() + " e hai vinto!<br>Dado tuo: "+res.getWinDice()+"<br>Dado avversario: "+res.getLoseDice()+"</left></html>");
+                            if(res.getLoser().equals(player.getNickname())) JOptionPane.showMessageDialog(frame1,"<html><left>Hai incrociato " + res.getWinner() + " e hai perso!<br>Dado tuo: "+res.getLoseDice()+"<br>Dado avversario: "+res.getWinDice()+"</left></html>");
+                        }
+                    } catch (NotBoundException e) {
+                        e.printStackTrace();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+
+
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

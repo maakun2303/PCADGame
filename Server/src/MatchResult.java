@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * Created by msnsk on 2017/08/28.
  */
-public class MatchResult {
+public class MatchResult implements Serializable {
     private ClientProfile winner;
     private ClientProfile loser;
     private int winDice;

@@ -31,8 +31,28 @@ public class ClientProfile implements Serializable{
     }
 
     ClientProfile() {
-        this.ammo = 5;
+        this.ammo = 1;
     }
+
+    public void decreseAmmo(){
+        if(ammo>0) ammo--;
+        else ammo = 3;
+    }
+
+    public void killBonus(){
+        ammo = ammo+3;
+    }
+
+    public void increseAmmo(){
+        ammo++;
+    }
+
+    public boolean hasAmmo(){
+        if(ammo < 0) return false;
+        else return true;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

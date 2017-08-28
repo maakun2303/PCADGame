@@ -26,4 +26,5 @@ public interface serverInterface extends Remote{
     void resetGame() throws RemoteException;
     int getTeamAmmo(EnumColor team) throws RemoteException;
     int getEnemyTeamAmmo(EnumColor team) throws RemoteException;
+    MatchResult getLastMatchInfo() throws RemoteException;
 }

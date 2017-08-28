@@ -30,6 +30,11 @@ public class ServerClass extends Observable implements serverInterface {
     private ClientProfile rinnegato;
     private GameTimer gameTimer;
     static int count = 1;
+    private MatchResult lastMatchInfo;
+
+    public MatchResult getLastMatchInfo(){
+        return lastMatchInfo;
+    }
 
     public void resetGame(){
         deleteObservers();
@@ -68,22 +73,44 @@ public class ServerClass extends Observable implements serverInterface {
     public MatchResult fight(ClientProfile player1, ClientProfile player2){
         MatchResult result = new MatchResult();
         Random rand = new Random();
-        int d1 = rand.nextInt(6);
-        int d2 = rand.nextInt(6);
+        int d1,d2;
+        do {
+            d1 = rand.nextInt(6) + 1;
+            d2 = rand.nextInt(6) + 1;
+        }while(d1==d2);
+
+        if(player1.getTeam()==EnumColor.blue) d1 = 7;
+        if(player2.getTeam()==EnumColor.blue) d2 = 7;
         if(d1>d2) {
+            System.out.println("WINNER IS: "+player1.getNickname());
             result.setWinner(player1);
             result.setLoser(player2);
             result.setWinDice(d1);
             result.setLoseDice(d2);
+            if(player2.hasAmmo()) { player2.decreseAmmo(); player1.increseAmmo(); }
+            else { gameMap.resetPlayerPosition(player2); player1.killBonus(); }
         }
-        else{
+        else if(d1<d2){
             result.setWinner(player2);
             result.setLoser(player1);
             result.setWinDice(d2);
             result.setLoseDice(d1);
+            if(player1.hasAmmo()) { player1.decreseAmmo(); player2.increseAmmo(); }
+            else { gameMap.resetPlayerPosition(player1); player2.killBonus(); }
         }
         return result;
     }
+
+/*    public Set<MatchResult> allBattles(){
+        Set<MatchResult> results = new HashSet<>();
+        Iterator<Node> nIt = gameMap.getNodes().iterator();
+        while(nIt.hasNext())
+        {
+            Node aux = nIt.next();
+            if(aux.isColliding()) results.add(fight((ClientProfile)aux.getUsers().toArray()[0],(ClientProfile)aux.getUsers().toArray()[1]));
+        }
+        return results;
+    }*/
 
     public ClientProfile getTurn() {
         return turn;
@@ -115,6 +142,12 @@ public class ServerClass extends Observable implements serverInterface {
                 player = item;
             }
         }
+        gameMap.getNode()
+        MatchResult results = new MatchResult();
+        if((!gameMap.getNode(newPosition).isEmpty()&&player.getTeam()!=gameMap.getPlayerIfOne(gameMap.getNode(newPosition)).getTeam())){
+            lastMatchInfo = fight(player,gameMap.getNode(newPosition).getUserIfOne());
+        }
+        else lastMatchInfo = null;
         gameMap.movePlayer(player, newPosition);
         moveNumber++;
         turn = loggedPlayers.get(moveNumber%loggedPlayers.size());
@@ -131,7 +164,6 @@ public class ServerClass extends Observable implements serverInterface {
                 player = item;
             }
         }
-
         return player.getAmmo();
     }
 

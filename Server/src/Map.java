@@ -43,13 +43,13 @@ public class Map implements Serializable{
 
     public Set<Node> adjacentNodes(Node node) {
         NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(structure);
-        /*Set <Node> adjSet = ngbr.neighborsOf(node);
-        Iterator adjIt = adjSet.iterator();
+        Set <Node> adjSet = ngbr.neighborsOf(node);
+        /*Iterator adjIt = adjSet.iterator();
         while(adjIt.hasNext()){
             Node aux = (Node) adjIt.next();
             if(aux.isColliding()) adjSet.remove(aux);
         }*/
-        return ngbr.neighborsOf(node);
+        return adjSet;
     }
 
     public Map() {
@@ -90,6 +90,10 @@ public class Map implements Serializable{
         aux.setUsers(set);
     }
 
+    public HashSet<ClientProfile> getPlayers(Node n){
+        return n.getUsers();
+    }
+
     public void moveRinnegato(ClientProfile rinnegato){
             Random rand = new Random();
 
@@ -100,6 +104,27 @@ public class Map implements Serializable{
 
     public Map getMap() {
         return this;
+    }
+
+    public Set<Node> getNodes(){
+        return structure.vertexSet();
+    }
+
+    public void resetPlayerPosition(ClientProfile player){
+        int newPosition = -1;
+        if(player.getTeam()== EnumColor.white) newPosition = 0;
+        else newPosition = Constants.mapSize-1;
+
+        getNode(player).removeUser(player);
+        getNode(newPosition).addUser(player);
+        HashSet<ClientProfile> set = getNode(newPosition).getUsers();
+        if(set == null) set = new HashSet<ClientProfile>();
+        set.add(player);
+        getNode(newPosition).setUsers(set);
+    }
+
+    public ClientProfile getPlayerIfOne(Node n){
+        return n.getUserIfOne();
     }
 
     public synchronized void movePlayer(ClientProfile player, int newPosition) {

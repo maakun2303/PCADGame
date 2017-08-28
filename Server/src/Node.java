@@ -14,7 +14,7 @@ public class Node implements Serializable {
         else
         {
             Random rand = new Random();
-            ammo = rand.nextInt(10);
+            ammo = rand.nextInt(1); //10
         }
         users = new HashSet<>();
     }
@@ -47,7 +47,12 @@ public class Node implements Serializable {
        this.ammo = 0;
    }
 
+   public int getId(){
+       return id;
+   }
+
    public boolean isColliding(){
+       System.out.println("Utenti sul nodo " + this.getId() + ": "+ users.toString());
        return (users != null && users.size() > 1)? true : false;
    }
 

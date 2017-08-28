@@ -92,7 +92,13 @@ public class WaitingGUI extends UnicastRemoteObject implements RemoteObserver {
                         Runnable init = new Runnable() {
                             public void run() {
                                 try {
-                                    new PlayingGUI(player);
+                                    try {
+                                        new PlayingGUI(player);
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    } catch (NotBoundException e) {
+                                        e.printStackTrace();
+                                    }
                                 } catch (RemoteException e) {
                                     e.printStackTrace();
                                 }
