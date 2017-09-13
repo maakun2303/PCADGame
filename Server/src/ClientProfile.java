@@ -40,7 +40,7 @@ public class ClientProfile implements Serializable{
     }
 
     public void killBonus(){
-        ammo = ammo+3;
+        ammo = ammo+1;
     }
 
     public void increseAmmo(){
@@ -48,7 +48,7 @@ public class ClientProfile implements Serializable{
     }
 
     public boolean hasAmmo(){
-        if(ammo < 0) return false;
+        if(ammo <= 0) return false;
         else return true;
     }
 

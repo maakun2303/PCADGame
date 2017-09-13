@@ -87,16 +87,16 @@ public class ServerClass extends Observable implements serverInterface {
             result.setLoser(player2);
             result.setWinDice(d1);
             result.setLoseDice(d2);
-            if(player2.hasAmmo()) { player2.decreseAmmo(); player1.increseAmmo(); }
-            else { gameMap.resetPlayerPosition(player2); player1.killBonus(); }
+            if(player2.hasAmmo()) { result.setDead(false); player2.decreseAmmo(); player1.increseAmmo(); }
+            else { result.setDead(true); gameMap.resetPlayerPosition(player2); player2.setAmmo(3); player1.killBonus(); }
         }
         else if(d1<d2){
             result.setWinner(player2);
             result.setLoser(player1);
             result.setWinDice(d2);
             result.setLoseDice(d1);
-            if(player1.hasAmmo()) { player1.decreseAmmo(); player2.increseAmmo(); }
-            else { gameMap.resetPlayerPosition(player1); player2.killBonus(); }
+            if(player1.hasAmmo()) { result.setDead(false); player1.decreseAmmo(); player2.increseAmmo(); }
+            else { result.setDead(true); gameMap.resetPlayerPosition(player1); player1.setAmmo(3); player2.killBonus(); }
         }
         return result;
     }
@@ -142,16 +142,19 @@ public class ServerClass extends Observable implements serverInterface {
                 player = item;
             }
         }
-        gameMap.getNode()
-        MatchResult results = new MatchResult();
-        if((!gameMap.getNode(newPosition).isEmpty()&&player.getTeam()!=gameMap.getPlayerIfOne(gameMap.getNode(newPosition)).getTeam())){
-            lastMatchInfo = fight(player,gameMap.getNode(newPosition).getUserIfOne());
+        ClientProfile rival = gameMap.getNode(newPosition).getUserIfOne();
+        if((!gameMap.getNode(newPosition).isEmpty()&&player.getTeam()!=rival.getTeam())){
+            System.out.println("Ciaone! Sono qui!");
+            lastMatchInfo = fight(player,rival);
         }
         else lastMatchInfo = null;
+
+        if(lastMatchInfo!=null && player.getNickname() == lastMatchInfo.getLoser() && !player.hasAmmo()) {player.killBonus(); rival.killBonus(); newPosition = 0;}
+        if(lastMatchInfo!=null && rival.getNickname() == lastMatchInfo.getLoser() && !rival.hasAmmo()) { rival.killBonus(); player.killBonus(); gameMap.movePlayer(rival,0); }
         gameMap.movePlayer(player, newPosition);
         moveNumber++;
         turn = loggedPlayers.get(moveNumber%loggedPlayers.size());
-        if(moveNumber%loggedPlayers.size() == 0) gameMap.moveRinnegato(rinnegato);
+        if(moveNumber%loggedPlayers.size() == 0) { gameMap.moveRinnegato(rinnegato); }
         setChanged();
         notifyObservers(gameMap);
         System.out.println(gameMap.toString());

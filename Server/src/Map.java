@@ -97,7 +97,7 @@ public class Map implements Serializable{
     public void moveRinnegato(ClientProfile rinnegato){
             Random rand = new Random();
 
-            int  n = rand.nextInt(this.structure.vertexSet().size()-1) + 0;
+            int  n = rand.nextInt(this.structure.vertexSet().size()-2) + 1;
             System.out.println(n);
             movePlayer(rinnegato,n);
     }
@@ -114,6 +114,7 @@ public class Map implements Serializable{
         int newPosition = -1;
         if(player.getTeam()== EnumColor.white) newPosition = 0;
         else newPosition = Constants.mapSize-1;
+        System.out.println("new pos: "+newPosition);
 
         getNode(player).removeUser(player);
         getNode(newPosition).addUser(player);

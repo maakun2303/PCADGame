@@ -6,6 +6,7 @@ import java.io.Serializable;
 public class MatchResult implements Serializable {
     private ClientProfile winner;
     private ClientProfile loser;
+    private boolean dead;
     private int winDice;
     private int loseDice;
 
@@ -39,5 +40,13 @@ public class MatchResult implements Serializable {
 
     public void setLoseDice(int loseDice){
         this.loseDice = loseDice;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean death) {
+        this.dead = death;
     }
 }
