@@ -48,8 +48,7 @@ public class ClientProfile implements Serializable{
     }
 
     public boolean hasAmmo(){
-        if(ammo <= 0) return false;
-        else return true;
+        return ammo > 0;
     }
 
 
@@ -103,7 +102,7 @@ public class ClientProfile implements Serializable{
 }
 
 enum EnumColor {
-    red, white, blue;
+    red, white, blue
 }
 
 

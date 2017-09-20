@@ -53,11 +53,11 @@ public class Node implements Serializable {
 
    public boolean isColliding(){
        System.out.println("Utenti sul nodo " + this.getId() + ": "+ users.toString());
-       return (users != null && users.size() > 1)? true : false;
+       return users != null && users.size() > 1;
    }
 
     public boolean isEmpty(){
-        return (users == null || users.size() == 0)? true : false;
+        return users == null || users.size() == 0;
     }
 
     public void removeUser(ClientProfile player){ System.out.println(users.toString()); users.remove(player); System.out.println(users.toString());}

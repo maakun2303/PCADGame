@@ -182,7 +182,7 @@ public class ServerClass extends Observable implements serverInterface {
         ClientProfile player = new ClientProfile();
         player.setNickname(username);
 
-        b = (b) ? false : true;
+        b = !b;
 
 
         player.setTeam(b);
@@ -265,7 +265,7 @@ public class ServerClass extends Observable implements serverInterface {
                 setChanged();
                 notifyObservers(new Map());
             }
-        };
+        }
     };
 
     public static void main(String[] args) throws IOException, LipeRMIException {

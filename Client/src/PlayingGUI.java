@@ -170,13 +170,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
 
                 if (cell != null && adjnodes.contains(graphAdapter.getCellToVertexMap().get(cell))) {
                     System.out.println("cell=" + graphAdapter.getLabel(cell));
-
-                    ClientClass client = null;
-                    try {
-                        client = new ClientClass();
-                    } catch (RemoteException e1) {
-                        e1.printStackTrace();
-                    }
                     serverInterface remoteService = null;
                     try {
                         try {

@@ -26,6 +26,6 @@ public class GameTimer implements Serializable {
     }
 
     public boolean isRunning(){
-        return (minutes == 0 && seconds == 0)? false : true;
+        return !(minutes == 0 && seconds == 0);
     }
 }

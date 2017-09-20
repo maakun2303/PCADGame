@@ -45,12 +45,7 @@ public class WaitingGUI extends UnicastRemoteObject implements RemoteObserver {
         frame1.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                ClientClass client = null;
-                try {
-                    client = new ClientClass();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+
                 serverInterface remoteService = null;
                 try {
                     try {

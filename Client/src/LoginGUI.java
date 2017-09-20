@@ -27,12 +27,6 @@ public class LoginGUI extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClientClass client = null;
-                try {
-                    client = new ClientClass();
-                } catch (RemoteException e1) {
-                    e1.printStackTrace();
-                }
                 Input = (textField1.getText());
                 if (Input.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please enter a nickname");
