@@ -142,7 +142,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                         e.printStackTrace();
                     }
                                 new LoginGUI();
-                    //frame1.dispatchEvent(new WindowEvent(frame1,WindowEvent.WINDOW_CLOSING));
                 }
             }
         };
@@ -252,7 +251,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         edgeStyle.setDefaultEdgeStyle(style);
         graphAdapter.setStylesheet(edgeStyle);
 
-        //mxIGraphLayout layout = new mxHierarchicalLayout(graphAdapter);
         layout.execute(graphAdapter.getDefaultParent());
 
         gracom.setConnectable(false);
@@ -261,7 +259,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         label1.setText("<html><left>Timer: " + gameTimer.toString() + "<br>Ammo: " + remoteService.getPlayerAmmo(player.getNickname()) + "</left></html>");
 
         panel1.add(gracom,BorderLayout.CENTER);
-        //panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
         panel2.add(label1);
 
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
@@ -273,7 +270,6 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         move();
 
         frame1.pack();
-        //setLocationByPlatform(true);
         frame1.setVisible(true);
     }
 

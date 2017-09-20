@@ -1,4 +1,3 @@
-import javax.swing.event.SwingPropertyChangeSupport;
 import java.io.Serializable;
 
 public class ClientProfile implements Serializable{

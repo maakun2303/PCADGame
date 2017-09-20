@@ -1,21 +1,10 @@
-import lipermi.exception.LipeRMIException;
-import lipermi.handler.CallHandler;
-import lipermi.net.Client;
-import lipermi.net.Server;
-import org.jgraph.JGraph;
 import org.jgrapht.alg.NeighborIndex;
-import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.generate.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.VertexFactory;
-
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.*;
 
-import static java.lang.Thread.sleep;
 
 public class Map implements Serializable{
 
@@ -44,11 +33,6 @@ public class Map implements Serializable{
     public Set<Node> adjacentNodes(Node node) {
         NeighborIndex<Node, DefaultEdge> ngbr = new NeighborIndex<>(structure);
         Set <Node> adjSet = ngbr.neighborsOf(node);
-        /*Iterator adjIt = adjSet.iterator();
-        while(adjIt.hasNext()){
-            Node aux = (Node) adjIt.next();
-            if(aux.isColliding()) adjSet.remove(aux);
-        }*/
         return adjSet;
     }
 
@@ -129,17 +113,12 @@ public class Map implements Serializable{
     }
 
     public synchronized void movePlayer(ClientProfile player, int newPosition) {
-//        System.out.println("Player stava in "+getNode(player).name +" e vuole andare in: "+newPosition.name);
         if(getNode(player) != null) {
-            System.out.println("cesta!");
             getNode(player).removeUser(player);
             System.out.println("Ammo in node: "+ getNode(newPosition).getAmmo());
             getNode(newPosition).addUser(player);
             System.out.println("Ammo in tasca:" + player.getAmmo());
-            //cambi stato di un oggetto del server
         }
-        else { System.out.println("uncesta!"); }
-        //System.out.println("Ho spostato il player su "+getNode(player).name+" ("+newPosition.name+")");
     }
 }
 

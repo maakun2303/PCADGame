@@ -1,16 +1,11 @@
 import lipermi.exception.LipeRMIException;
-import lipermi.handler.CallHandler;
-import lipermi.net.Server;
-
 import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.AllPermission;
 import java.util.*;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -101,16 +96,6 @@ public class ServerClass extends Observable implements serverInterface {
         return result;
     }
 
-/*    public Set<MatchResult> allBattles(){
-        Set<MatchResult> results = new HashSet<>();
-        Iterator<Node> nIt = gameMap.getNodes().iterator();
-        while(nIt.hasNext())
-        {
-            Node aux = nIt.next();
-            if(aux.isColliding()) results.add(fight((ClientProfile)aux.getUsers().toArray()[0],(ClientProfile)aux.getUsers().toArray()[1]));
-        }
-        return results;
-    }*/
 
     public ClientProfile getTurn() {
         return turn;
@@ -269,18 +254,6 @@ public class ServerClass extends Observable implements serverInterface {
     };
 
     public static void main(String[] args) throws IOException, LipeRMIException {
-        /*
-        System.out.println("Connecting...");
-
-        CallHandler callHandler = new CallHandler();
-        serverInterface interfaceImplementation;
-        interfaceImplementation = new ServerClass();
-        callHandler.registerGlobal(serverInterface.class,interfaceImplementation);
-
-        Server server = new Server();
-        int thePortIWantToBind = 4455;
-        server.bind(thePortIWantToBind,callHandler);
-        System.out.println("Binding...");*/
         try {
             Registry rmiRegistry = LocateRegistry.createRegistry(4456);
             serverInterface rmiService = (serverInterface) UnicastRemoteObject.exportObject(new ServerClass(), 4456);
