@@ -1,12 +1,13 @@
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Node implements Serializable {
     public int name;
     public int ammo;
     static int id = 0;
-    HashSet<ClientProfile> users;
+    List<ClientProfile> users;
 
     Node() {
         name = id++;
@@ -14,9 +15,9 @@ public class Node implements Serializable {
         else
         {
             Random rand = new Random();
-            ammo = rand.nextInt(1); //10
+            ammo = rand.nextInt(2);
         }
-        users = new HashSet<>();
+        users = new CopyOnWriteArrayList<ClientProfile>();
     }
 
    @Override
@@ -28,7 +29,7 @@ public class Node implements Serializable {
         return aux;
    }
 
-   public HashSet<ClientProfile> getUsers(){
+   public List<ClientProfile> getUsers(){
         return users;
    }
 
@@ -51,18 +52,13 @@ public class Node implements Serializable {
        return id;
    }
 
-   public boolean isColliding(){
-       System.out.println("Utenti sul nodo " + this.getId() + ": "+ users.toString());
-       return users != null && users.size() > 1;
-   }
-
     public boolean isEmpty(){
         return users == null || users.size() == 0;
     }
 
-    public void removeUser(ClientProfile player){ System.out.println(users.toString()); users.remove(player); System.out.println(users.toString());}
+    public void removeUser(ClientProfile player){ users.remove(player);}
 
-   public void setUsers(HashSet<ClientProfile> users){
+   public void setUsers(List<ClientProfile> users){
        this.users = users;
    }
 
@@ -82,7 +78,6 @@ public class Node implements Serializable {
         int result = 17;
         result = 31 * result + name;
         result = 31 * result + ammo;
-        //result = result + users.hashCode();
         return result;
     }
     public static void resetID(){

@@ -52,7 +52,7 @@ public class LoginGUI extends JFrame {
                             else {
                                     setVisible(false);
 
-                                    Runnable init = new Runnable() {
+                                Runnable init = new Runnable() {
                                         public void run() {
                                             try {
                                                 new WaitingGUI(player);

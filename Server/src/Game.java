@@ -1,4 +1,3 @@
-import lipermi.exception.LipeRMIException;
 import javax.swing.*;
 import java.io.IOException;
 import java.io.Serializable;
@@ -14,17 +13,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Created by Filippo on 22/05/2017.
  */
-public class ServerClass extends Observable implements serverInterface {
+public class Game extends Observable implements serverInterface {
 
-    static List<ClientProfile> loggedPlayers = new CopyOnWriteArrayList<ClientProfile>(); //concorrente ?
+    static List<ClientProfile> loggedPlayers = new CopyOnWriteArrayList<ClientProfile>();
     boolean b = false; //for team choice
-    private int maxPlayers = 2;
+    private int maxPlayers = 4;
     private Map gameMap;
     private static int moveNumber = 0;
     private ClientProfile turn;
     private ClientProfile rinnegato;
     private GameTimer gameTimer;
-    static int count = 1;
+    static int disconnectionCount = 1;
     private MatchResult lastMatchInfo;
 
     public MatchResult getLastMatchInfo(){
@@ -33,17 +32,17 @@ public class ServerClass extends Observable implements serverInterface {
 
     public void resetGame(){
         deleteObservers();
-        if(count == maxPlayers){
+        if(disconnectionCount == maxPlayers){
             Node.resetID();
-            rinnegato = new ClientProfile("Mazzarello",EnumColor.blue);
+            rinnegato = new ClientProfile("Rinnegato",EnumColor.blue);
             turn = new ClientProfile();
             moveNumber = 0;
         loggedPlayers = new CopyOnWriteArrayList<>();
         gameTimer = new GameTimer();
         gameMap = new Map();
         gameMap.addRinnegato(rinnegato);
-        count = 1;}
-        count++;
+        disconnectionCount = 1;}
+        disconnectionCount++;
     }
 
     public int getTeamAmmo(EnumColor team) throws RemoteException{
@@ -60,11 +59,6 @@ public class ServerClass extends Observable implements serverInterface {
         return (team == EnumColor.white)? getTeamAmmo(EnumColor.red) : getTeamAmmo(EnumColor.white);
     }
 
-    private int dice(){
-        Random rand = new Random();
-        return rand.nextInt(6);
-    }
-
     public MatchResult fight(ClientProfile player1, ClientProfile player2){
         MatchResult result = new MatchResult();
         Random rand = new Random();
@@ -77,21 +71,20 @@ public class ServerClass extends Observable implements serverInterface {
         if(player1.getTeam()==EnumColor.blue) d1 = 7;
         if(player2.getTeam()==EnumColor.blue) d2 = 7;
         if(d1>d2) {
-            System.out.println("WINNER IS: "+player1.getNickname());
             result.setWinner(player1);
             result.setLoser(player2);
             result.setWinDice(d1);
             result.setLoseDice(d2);
-            if(player2.hasAmmo()) { result.setDead(false); player2.decreseAmmo(); player1.increseAmmo(); }
-            else { result.setDead(true); gameMap.resetPlayerPosition(player2); player2.setAmmo(3); player1.killBonus(); }
+            if(player2.hasAmmo()) { player2.decreseAmmo(); player1.increseAmmo(); }
+            else { gameMap.resetPlayerPosition(player2); player2.setAmmo(3); player1.killBonus(); }
         }
         else if(d1<d2){
             result.setWinner(player2);
             result.setLoser(player1);
             result.setWinDice(d2);
             result.setLoseDice(d1);
-            if(player1.hasAmmo()) { result.setDead(false); player1.decreseAmmo(); player2.increseAmmo(); }
-            else { result.setDead(true); gameMap.resetPlayerPosition(player1); player1.setAmmo(3); player2.killBonus(); }
+            if(player1.hasAmmo()) { player1.decreseAmmo(); player2.increseAmmo(); }
+            else { gameMap.resetPlayerPosition(player1); player1.setAmmo(3); player2.killBonus(); }
         }
         return result;
     }
@@ -129,7 +122,6 @@ public class ServerClass extends Observable implements serverInterface {
         }
         ClientProfile rival = gameMap.getNode(newPosition).getUserIfOne();
         if((!gameMap.getNode(newPosition).isEmpty()&&player.getTeam()!=rival.getTeam())){
-            System.out.println("Ciaone! Sono qui!");
             lastMatchInfo = fight(player,rival);
         }
         else lastMatchInfo = null;
@@ -142,7 +134,6 @@ public class ServerClass extends Observable implements serverInterface {
         if(moveNumber%loggedPlayers.size() == 0) { gameMap.moveRinnegato(rinnegato); }
         setChanged();
         notifyObservers(gameMap);
-        System.out.println(gameMap.toString());
     }
 
     public int getPlayerAmmo(String username) throws RemoteException{
@@ -159,7 +150,6 @@ public class ServerClass extends Observable implements serverInterface {
 
         for (ClientProfile item : loggedPlayers) {
             if (item.getNickname().equals(username)) {
-                System.out.println("An user used an existing nickname");
                 return new ClientProfile("");
             }
         }
@@ -169,17 +159,9 @@ public class ServerClass extends Observable implements serverInterface {
 
         b = !b;
 
-
         player.setTeam(b);
         if(loggedPlayers.isEmpty()) turn = player;
         loggedPlayers.add(player);
-
-        System.out.println("Total players: " + loggedPlayers.size());
-
-        if (loggedPlayers.size() == maxPlayers) {
-            System.out.println("Game is full");
-
-        }
 
         gameMap.addPlayer(player);
         setChanged();
@@ -204,14 +186,12 @@ public class ServerClass extends Observable implements serverInterface {
     public void addObserver(RemoteObserver o) throws RemoteException {
         WrappedObserver mo = new WrappedObserver(o);
         addObserver(mo);
-        System.out.println("Added observer:" + mo);
     }
 
     @Override
     public void deleteObserver(RemoteObserver o) throws RemoteException {
         WrappedObserver mo = new WrappedObserver(o);
         deleteObserver(mo);
-        System.out.println("Delete observer:" + mo);
     }
 
     public Map getMap() throws RemoteException{
@@ -222,41 +202,25 @@ public class ServerClass extends Observable implements serverInterface {
         return gameTimer;
     }
 
-    public ServerClass() {
+    public Game() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 gameTimer = new GameTimer();
-                rinnegato = new ClientProfile("DelziKiller");
+                rinnegato = new ClientProfile("Rinnegato");
                 rinnegato.setTeam(EnumColor.blue);
                 gameMap = new Map();
                 gameMap.addRinnegato(rinnegato);
                 System.out.println(gameMap.toString());
-                //thread.start();
             }
         });
 
     }
 
 
-    Thread thread = new Thread() {
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    Thread.sleep(5 * 1000);
-                } catch (InterruptedException e) {
-                    // ignore
-                }
-                setChanged();
-                notifyObservers(new Map());
-            }
-        }
-    };
-
-    public static void main(String[] args) throws IOException, LipeRMIException {
+    public static void main(String[] args) throws IOException {
         try {
             Registry rmiRegistry = LocateRegistry.createRegistry(4456);
-            serverInterface rmiService = (serverInterface) UnicastRemoteObject.exportObject(new ServerClass(), 4456);
+            serverInterface rmiService = (serverInterface) UnicastRemoteObject.exportObject(new Game(), 4456);
             rmiRegistry.bind("RmiService", rmiService);
         } catch (Exception ex) {
             ex.printStackTrace();

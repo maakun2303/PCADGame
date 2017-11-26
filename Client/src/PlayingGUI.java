@@ -165,10 +165,8 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
             @Override
             public void mousePressed(MouseEvent e) {
                 Object cell = gracom.getCellAt(e.getX(), e.getY());
-                System.out.println("Mouse click in graph component");
 
                 if (cell != null && adjnodes.contains(graphAdapter.getCellToVertexMap().get(cell))) {
-                    System.out.println("cell=" + graphAdapter.getLabel(cell));
                     serverInterface remoteService = null;
                     try {
                         try {
@@ -207,13 +205,11 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
                 while (iterProf.hasNext()) {
                     ClientProfile cp = iterProf.next();
                     if (cp.getTeam() == EnumColor.white) {
-                        //cell = graphAdapter.getVertexToCellMap().get(n);
                         if(someoneRed == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", new Object[]{cell});
                         else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
                         someoneWhite = true;
                     }
                     if (cp.getTeam() == EnumColor.red) {
-                        //cell = graphAdapter.getVertexToCellMap().get(n);
                         if(someoneWhite == false) graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FF0000", new Object[]{cell});
                         else graphAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFC0CB", new Object[]{cell});
                         someoneRed = true;
@@ -240,7 +236,7 @@ public class PlayingGUI extends UnicastRemoteObject implements RemoteObserver{
         style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
         style.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
         style.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
-        style.put(mxConstants.STYLE_STROKECOLOR, "#6482B9"); // default is #6482B9
+        style.put(mxConstants.STYLE_STROKECOLOR, "#6482B9");
         style.put(mxConstants.STYLE_FONTCOLOR, "#446299");
         style.put(mxConstants.STYLE_NOLABEL, "1");
         style.put(mxConstants.STYLE_ALIGN,"center");

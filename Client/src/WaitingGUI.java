@@ -84,6 +84,7 @@ public class WaitingGUI extends UnicastRemoteObject implements RemoteObserver {
                         label1.setText("<html><center>Welcome " + player.getNickname() + "<br>Waiting for more " + result + " players</center></html>");
                     } else {
                         frame1.setVisible(false);
+
                         Runnable init = new Runnable() {
                             public void run() {
                                 try {

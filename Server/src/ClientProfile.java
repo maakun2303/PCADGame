@@ -94,9 +94,7 @@ public class ClientProfile implements Serializable{
     }
 
     public void takeAmmo(int newAmmo){
-            System.out.println("Ammo prima: " + ammo);
             ammo = ammo + newAmmo;
-            System.out.println("Ammo dopo: " + ammo);
     }
 }
 
